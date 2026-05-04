@@ -1,0 +1,1136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=3.0, user-scalable=no, viewport-fit=cover" />
+  <title>Admin — Aleeman Primary School Portal</title>
+  <link rel="icon" type="image/x-icon" href="aleeman-logo.png" />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+
+
+
+
+    <script>window.FLOATING_TEXT = 'Proudly 2025/2026';</script>
+<script src="floating.js"></script>
+
+
+
+   <link rel="manifest" href="manifest.json" />
+    <meta name="theme-color" content="#008000" />
+    <script src="pwa-install.js" defer></script>
+
+
+    <link rel="icon" type="image/x-icon" href="aleeman-logo.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="aleeman-logo.png" />
+
+    <!-- ④ PWA meta -->
+    <meta name="application-name" content="Aleeman School" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="Aleeman School" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent"
+    />
+    <meta
+      name="theme-color"
+      content="#008000"
+      media="(prefers-color-scheme: dark)"
+    />
+
+
+
+
+    <!-- ⑥ Manifest -->
+    <link rel="manifest" href="manifest.json" />
+
+    <!-- ⑦ Open Graph — used by WhatsApp, Facebook, Discord, iMessage previews -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://aleemanschool-teacher-portal.vercel.app/" />
+    <meta property="og:site_name" content="Aleeman" />
+    <meta
+      property="og:title"
+      content="Admin Portal — Aleeman Primary School"
+    />
+    <meta
+      property="og:description"
+      content="Aleeman School — Admin Portal. Manage school resources, oversee operations, and connect with staff."
+    />
+    <meta
+      property="og:image"
+      content="https://aleemanschool-teacher-portal.vercel.app/aleeman-logo.png"
+    />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --p1:#1a237e; --p2:#283593; --p3:#3949ab; --p4:#5c6bc0; --p5:#e8eaf6;
+      --red:#c62828; --red-l:#ffebee; --blue:#0277bd; --blue-l:#e1f5fe;
+      --amber:#f57f17; --amber-l:#fff8e1; --purple:#6a1b9a; --purple-l:#f3e5f5;
+      --green:#1a5c2a; --green-l:#d8f3dc;
+      --text:#111827; --muted:#4b5563; --border:#c5cae9; --bg:#f0f2ff; --white:#fff;
+      --sidebar:240px; --shadow:0 2px 16px rgba(26,35,126,.1);
+    }
+    * {
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  box-sizing: border-box;
+}
+    * { -webkit-user-select:none; -ms-user-select:none; user-select:none; }
+    body { font-family:'DM Sans',system-ui,sans-serif; background:var(--bg); color:var(--text); }
+    h1,h2,h3,h4 { font-family:'Outfit',sans-serif; }
+
+    #auth-loading { position:fixed; inset:0; background:linear-gradient(135deg,var(--p1),var(--p3)); display:flex; flex-direction:column; align-items:center; justify-content:center; z-index:99999; gap:1.25rem; }
+    #auth-loading .al-icon { font-size:3rem; }
+    #auth-loading .al-spinner { width:44px; height:44px; border:4px solid rgba(255,255,255,.25); border-top-color:#fff; border-radius:50%; animation:spin .7s linear infinite; }
+    #auth-loading p { color:rgba(255,255,255,.85); font-size:.9rem; font-weight:600; }
+
+    #login-page { min-height:100vh; display:none; align-items:center; justify-content:center; background:linear-gradient(135deg,var(--p1),var(--p2),var(--p3)); }
+    .login-box { background:var(--white); border-radius:20px; padding:2.5rem 2rem; width:100%; max-width:400px; box-shadow:0 12px 48px rgba(0,0,0,.25); text-align:center; }
+    .login-box .lgo { font-size:2.8rem; margin-bottom:.5rem; }
+    .login-box h1 { font-size:1.5rem; color:var(--p2); margin-bottom:.25rem; }
+    .login-box .sub { font-size:.82rem; color:var(--muted); margin-bottom:1.75rem; }
+
+    .fg { text-align:left; margin-bottom:1rem; }
+    .fg label { display:block; font-size:.78rem; font-weight:600; color:var(--muted); margin-bottom:.3rem; letter-spacing:.03em; text-transform:uppercase; }
+    .fg input,.fg select,.fg textarea { width:100%; padding:.72rem .95rem; border:1.5px solid var(--border); border-radius:10px; font-size:.92rem; outline:none; transition:border .2s; font-family:inherit; background:var(--white); }
+    .fg input:focus,.fg select:focus,.fg textarea:focus { border-color:var(--p2); box-shadow:0 0 0 3px rgba(40,53,147,.08); }
+    .fg textarea { resize:vertical; min-height:70px; }
+
+    .btn { display:inline-flex; align-items:center; justify-content:center; gap:.4rem; padding:.72rem 1.4rem; border-radius:10px; border:none; font-size:.88rem; font-weight:600; cursor:pointer; transition:opacity .15s,transform .15s; font-family:'Outfit',sans-serif; }
+    .btn:hover:not(:disabled) { opacity:.88; transform:translateY(-1px); }
+    .btn:disabled { opacity:.55; cursor:not-allowed; transform:none; }
+    .btn-primary { background:var(--p2); color:var(--white); }
+    .btn-blue    { background:var(--blue); color:var(--white); }
+    .btn-danger  { background:var(--red); color:var(--white); }
+    .btn-amber   { background:var(--amber); color:var(--white); }
+    .btn-ghost   { background:transparent; color:var(--p2); border:1.5px solid var(--p2); }
+    .btn-ghost-w { background:transparent; color:var(--white); border:1.5px solid rgba(255,255,255,.35); }
+    .btn-sm { padding:.38rem .9rem; font-size:.78rem; }
+    .btn-full { width:100%; }
+    .err { background:var(--red-l); color:var(--red); padding:.65rem .95rem; border-radius:10px; font-size:.84rem; margin-top:.75rem; display:none; }
+    .err.show { display:block; }
+
+    #dashboard-page { display:none; min-height:100vh; }
+    .layout { display:flex; min-height:100vh; }
+
+    .sidebar { width:var(--sidebar); background:var(--p1); color:var(--white); display:flex; flex-direction:column; position:fixed; top:0; left:0; height:100vh; z-index:200; transition:transform .25s; }
+    .sb-header { padding:1.25rem 1rem; border-bottom:1px solid rgba(255,255,255,.1); }
+    .sb-school { font-weight:800; font-size:.95rem; line-height:1.3; }
+    .sb-role { font-size:.72rem; opacity:.55; margin-top:.2rem; }
+    .sb-admin-name { font-size:.78rem; opacity:.8; margin-top:.4rem; background:rgba(255,255,255,.1); border-radius:6px; padding:.25rem .5rem; display:inline-block; }
+    .sb-label { font-size:.62rem; text-transform:uppercase; letter-spacing:.08em; opacity:.4; padding:.5rem 1.25rem .2rem; font-weight:700; }
+    .nav-links { padding:.75rem 0; flex:1; overflow-y:auto; }
+    .nav-link { display:flex; align-items:center; gap:.65rem; padding:.72rem 1.25rem; color:rgba(255,255,255,.7); background:none; border:none; border-left:3px solid transparent; width:100%; text-align:left; font-size:.875rem; cursor:pointer; transition:all .15s; font-family:'DM Sans',sans-serif; }
+    .nav-link:hover { background:rgba(255,255,255,.08); color:var(--white); }
+    .nav-link.active { background:rgba(255,255,255,.13); color:var(--white); border-left-color:var(--p4); }
+    .nav-link .ico { font-size:1.05rem; width:20px; text-align:center; }
+    .sb-footer { padding:1rem; border-top:1px solid rgba(255,255,255,.1); }
+
+    .main { margin-left:var(--sidebar); flex:1; display:flex; flex-direction:column; min-width:0; }
+    .topbar { background:var(--white); border-bottom:1px solid var(--border); padding:.9rem 1.5rem; display:flex; align-items:center; justify-content:space-between; box-shadow:var(--shadow); position:sticky; top:0; z-index:100; }
+    .topbar-l { display:flex; align-items:center; gap:.75rem; }
+    .topbar h2 { font-size:1.15rem; font-weight:800; }
+    .topbar-r { display:flex; align-items:center; gap:.9rem; font-size:.82rem; color:var(--muted); }
+    .menu-toggle { display:none; background:none; border:none; font-size:1.4rem; cursor:pointer; padding:.2rem; }
+
+    .panel { display:none; padding:1.5rem; animation:fadeIn .2s; }
+    .panel.active { display:block; }
+    @keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:none} }
+
+    .stats-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:1rem; margin-bottom:1.5rem; }
+    .stat-card { background:var(--white); border-radius:14px; padding:1.2rem 1.4rem; box-shadow:var(--shadow); border-left:4px solid; }
+    .stat-card.indigo { border-color:var(--p2); }
+    .stat-card.blue   { border-color:var(--blue); }
+    .stat-card.amber  { border-color:var(--amber); }
+    .stat-card.green  { border-color:var(--green); }
+    .stat-lbl { font-size:.72rem; color:var(--muted); font-weight:700; text-transform:uppercase; letter-spacing:.05em; }
+    .stat-val { font-size:2.1rem; font-weight:900; margin:.3rem 0; font-family:'Outfit',sans-serif; }
+    .stat-ico { font-size:1.4rem; }
+
+    .sec-hdr { display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem; flex-wrap:wrap; gap:.5rem; }
+    .sec-hdr h3 { font-size:1.05rem; }
+
+    .tbl-card { background:var(--white); border-radius:14px; box-shadow:var(--shadow); overflow:hidden; }
+    .tbl-card table { display:block; overflow-x:auto; -webkit-overflow-scrolling:touch; }
+    .tbl-toolbar { padding:.75rem 1rem; border-bottom:1px solid var(--border); display:flex; gap:.5rem; align-items:center; flex-wrap:wrap; }
+    .tbl-toolbar input,.tbl-toolbar select { padding:.45rem .8rem; border:1.5px solid var(--border); border-radius:8px; font-size:.83rem; outline:none; transition:border .2s; font-family:inherit; background:var(--white); }
+    .tbl-toolbar input:focus,.tbl-toolbar select:focus { border-color:var(--p2); }
+    .tbl-toolbar input { flex:1; min-width:150px; }
+    table { width:100%; border-collapse:collapse; font-size:.86rem; }
+    th { background:var(--p5); color:var(--p1); font-weight:800; padding:.72rem 1rem; text-align:left; font-size:.76rem; text-transform:uppercase; letter-spacing:.05em; }
+    td { padding:.68rem 1rem; border-bottom:1px solid #edf0f7; }
+    tr:last-child td { border-bottom:none; }
+    tr:hover td { background:#f8f9ff; }
+    .empty-row td { text-align:center; color:var(--muted); padding:2.5rem; font-size:.88rem; }
+
+    .badge { display:inline-block; padding:.18rem .6rem; border-radius:20px; font-size:.73rem; font-weight:700; }
+    .b-indigo { background:var(--p5); color:var(--p2); }
+    .b-blue   { background:var(--blue-l); color:var(--blue); }
+    .b-amber  { background:var(--amber-l); color:var(--amber); }
+    .b-red    { background:var(--red-l); color:var(--red); }
+    .b-green  { background:var(--green-l); color:var(--green); }
+    .act-btns { display:flex; gap:.35rem; flex-wrap:wrap; }
+
+    .load-more-wrap { padding:1rem; text-align:center; border-top:1px solid var(--border); display:none; }
+    .load-more-wrap.visible { display:block; }
+
+    @keyframes shimmer { 0%{background-position:200% center} 100%{background-position:-200% center} }
+    .skel { display:block; height:13px; border-radius:7px; background:linear-gradient(90deg,#e8eaf6 25%,#d5d9f0 50%,#e8eaf6 75%); background-size:200% 100%; animation:shimmer 1.4s ease-in-out infinite; }
+    .skel.skel-sm { height:10px; width:60%; }
+
+    .modal-ov { position:fixed; inset:0; background:rgba(0,0,0,.52); display:none; align-items:center; justify-content:center; z-index:1000; padding:1rem; }
+    .modal-ov.open { display:flex; }
+    .modal { background:var(--white); border-radius:16px; width:100%; max-width:500px; box-shadow:0 24px 64px rgba(0,0,0,.2); max-height:90vh; overflow-y:auto; }
+    .modal.wide { max-width:680px; }
+    .modal-hdr { padding:1.2rem 1.5rem; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; background:var(--white); z-index:10; }
+    .modal-hdr h3 { font-size:1.05rem; }
+    .modal-close { background:none; border:none; font-size:1.3rem; cursor:pointer; color:var(--muted); padding:.2rem; }
+    .modal-body { padding:1.5rem; }
+    .modal-ftr { padding:1rem 1.5rem; border-top:1px solid var(--border); display:flex; gap:.6rem; justify-content:flex-end; position:sticky; bottom:0; background:var(--white); }
+
+    .tabs { display:flex; gap:0; border-bottom:2px solid var(--border); margin-bottom:1.5rem; overflow-x:auto; }
+    .tab-btn { padding:.6rem 1.1rem; border:none; background:none; font-size:.84rem; font-weight:600; cursor:pointer; color:var(--muted); border-bottom:3px solid transparent; margin-bottom:-2px; white-space:nowrap; transition:color .15s; font-family:'DM Sans',sans-serif; }
+    .tab-btn.active { color:var(--p2); border-bottom-color:var(--p2); }
+    .tab-panel { display:none; }
+    .tab-panel.active { display:block; }
+
+    /* Assessment test rows */
+    .test-row { display:grid; grid-template-columns:1fr 100px 38px; gap:.5rem; align-items:center; margin-bottom:.6rem; }
+    .test-row input[type=text] { padding:.55rem .75rem; border:1.5px solid var(--border); border-radius:8px; font-size:.88rem; outline:none; transition:border .15s; font-family:inherit; }
+    .test-row input[type=text]:focus { border-color:var(--p2); }
+    .test-row input[type=number] { padding:.55rem .5rem; border:1.5px solid var(--border); border-radius:8px; font-size:.88rem; text-align:center; outline:none; transition:border .15s; font-family:inherit; width:100%; }
+    .test-row input[type=number]:focus { border-color:var(--p2); }
+    .test-remove { background:var(--red-l); color:var(--red); border:none; border-radius:7px; width:34px; height:34px; font-size:1rem; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:background .15s,color .15s; }
+    .test-remove:hover { background:var(--red); color:var(--white); }
+
+    /* Subject list */
+    .subj-list { display:flex; flex-direction:column; gap:.4rem; max-height:320px; overflow-y:auto; padding-right:.25rem; }
+    .subj-item { display:flex; align-items:center; gap:.4rem; }
+    .subj-name-inp { flex:1.4; padding:.48rem .7rem; border:1.5px solid var(--border); border-radius:8px; font-size:.86rem; outline:none; font-family:inherit; }
+    .subj-name-inp:focus { border-color:var(--p2); }
+    .subj-pass-inp { flex:1; padding:.48rem .7rem; border:1.5px solid var(--border); border-radius:8px; font-size:.86rem; outline:none; font-family:inherit; }
+    .subj-pass-inp:focus { border-color:var(--p2); }
+    .subj-pass-inp.missing { border-color:var(--red); background:var(--red-l); }
+    .subj-remove { background:var(--red-l); color:var(--red); border:none; border-radius:6px; width:28px; height:28px; font-size:.85rem; cursor:pointer; flex-shrink:0; display:flex; align-items:center; justify-content:center; transition:background .15s,color .15s; }
+    .subj-remove:hover { background:var(--red); color:var(--white); }
+    .subj-list-header { display:grid; grid-template-columns:1fr 1fr 28px; gap:.4rem; padding:0 .1rem .3rem; font-size:.72rem; font-weight:700; text-transform:uppercase; color:var(--muted); letter-spacing:.04em; }
+    .subj-pw-wrap { position:relative; flex:1; display:flex; align-items:center; }
+    .subj-pw-wrap input { width:100%; padding-right:2.2rem !important; }
+    .subj-pw-eye { position:absolute; right:.45rem; background:none; border:none; cursor:pointer; font-size:.88rem; color:var(--muted); padding:.1rem; line-height:1; }
+    .subj-pw-eye:hover { color:var(--p2); }
+
+    /* Class management */
+    .class-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:.75rem; margin-bottom:1rem; }
+    .class-chip { display:flex; align-items:center; justify-content:space-between; background:var(--white); border:1.5px solid var(--border); border-radius:10px; padding:.6rem 1rem; font-size:.88rem; font-weight:600; }
+    .class-chip .chip-label { color:var(--p2); }
+    .class-chip .chip-del { background:none; border:none; color:var(--red); cursor:pointer; font-size:.95rem; padding:.15rem; border-radius:5px; transition:background .15s; }
+    .class-chip .chip-del:hover { background:var(--red-l); }
+    .class-group-hdr { font-size:.78rem; font-weight:800; text-transform:uppercase; letter-spacing:.06em; color:var(--muted); margin:1rem 0 .5rem; }
+
+    .info-box { background:var(--p5); border:1px solid var(--border); border-radius:10px; padding:.9rem 1.1rem; font-size:.84rem; color:var(--p1); margin-bottom:1.25rem; line-height:1.6; }
+    .warn-box  { background:var(--amber-l); border:1px solid #ffe082; border-radius:10px; padding:.9rem 1.1rem; font-size:.84rem; color:#5d4037; margin-bottom:1.25rem; line-height:1.6; }
+    .settings-card { background:var(--white); border-radius:14px; box-shadow:var(--shadow); padding:1.5rem; margin-bottom:1.5rem; }
+    .settings-card h4 { font-size:1rem; margin-bottom:1.25rem; color:var(--p2); display:flex; align-items:center; gap:.5rem; border-bottom:2px solid var(--p5); padding-bottom:.75rem; }
+
+    .spinner { display:inline-block; width:16px; height:16px; border:2.5px solid rgba(255,255,255,.4); border-top-color:var(--white); border-radius:50%; animation:spin .6s linear infinite; }
+    @keyframes spin { to{transform:rotate(360deg)} }
+    #toast { position:fixed; bottom:1.5rem; right:1.5rem; padding:.75rem 1.25rem; border-radius:10px; font-size:.86rem; z-index:9999; transform:translateY(20px); opacity:0; transition:all .25s; pointer-events:none; font-weight:600; max-width:320px; }
+    #toast.show { transform:translateY(0); opacity:1; }
+    #toast.success { background:var(--p2); color:var(--white); }
+    #toast.error   { background:var(--red); color:var(--white); }
+    #toast.info    { background:var(--blue); color:var(--white); }
+
+    .pw-wrap { position:relative; }
+    .pw-wrap input { padding-right:2.6rem !important; }
+    .pw-eye { position:absolute; right:.65rem; top:50%; transform:translateY(-50%); background:none; border:none; cursor:pointer; color:var(--muted); font-size:1rem; padding:.15rem; line-height:1; }
+    .pw-eye:hover { color:var(--p2); }
+    code { background:#eef0fb; padding:.1rem .4rem; border-radius:4px; font-size:.82em; }
+
+    @media (max-width:720px) {
+      .sidebar { transform:translateX(-100%); }
+      .sidebar.open { transform:none; }
+      .main { margin-left:0; }
+      .menu-toggle { display:flex; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="auth-loading">
+  <div class="al-icon">🛡️</div>
+  <div class="al-spinner"></div>
+  <p>Verifying session…</p>
+</div>
+
+<div id="login-page">
+  <div class="login-box">
+    <div class="lgo">🛡️</div>
+    <h1>Admin Login</h1>
+    <p class="sub">Aleeman Primary School Portal</p>
+    <div class="fg"><label>Email Address</label><input type="email" id="l-email" placeholder="admin@aleeman.edu.ng" autocomplete="email" /></div>
+    <div class="fg">
+      <label>Password</label>
+      <div class="pw-wrap">
+        <input type="password" id="l-pass" placeholder="••••••••" autocomplete="current-password" />
+        <button class="pw-eye" type="button" id="admin-login-pw-eye" title="Show/hide password">👁️</button>
+      </div>
+    </div>
+    <button class="btn btn-primary btn-full" id="login-btn">Sign In</button>
+    <div class="err" id="login-err"></div>
+  </div>
+</div>
+
+<div id="dashboard-page">
+  <div class="layout">
+    <aside class="sidebar" id="sidebar">
+      <div class="sb-header">
+        <div class="sb-school">🏫 Aleeman Primary</div>
+        <div class="sb-role">Admin Dashboard</div>
+        <div class="sb-admin-name" id="sb-admin-name">Admin</div>
+      </div>
+      <nav class="nav-links">
+        <button class="nav-link active" data-panel="overview"><span class="ico">📊</span> Overview</button>
+        <button class="nav-link" data-panel="teachers"><span class="ico">👨‍🏫</span> Teachers</button>
+        <button class="nav-link" data-panel="students"><span class="ico">🎓</span> Students</button>
+        <button class="nav-link" data-panel="results"><span class="ico">📋</span> Results</button>
+        <button class="nav-link" data-panel="settings"><span class="ico">⚙️</span> Settings</button>
+      </nav>
+      <div class="sb-footer">
+        <button class="btn btn-ghost-w btn-full btn-sm" id="logout-btn">🚪 Sign Out</button>
+      </div>
+    </aside>
+
+    <main class="main">
+      <div class="topbar">
+        <div class="topbar-l">
+          <button class="menu-toggle" id="menu-toggle">☰</button>
+          <h2 id="page-title">Overview</h2>
+        </div>
+        <div class="topbar-r">
+          <span id="session-display" style="background:var(--p5);color:var(--p2);padding:.25rem .65rem;border-radius:20px;font-size:.75rem;font-weight:700"></span>
+          <span id="top-date"></span>
+        </div>
+      </div>
+
+      <!-- OVERVIEW -->
+      <div class="panel active" id="panel-overview">
+        <div class="stats-grid">
+          <div class="stat-card indigo"><div class="stat-ico">👨‍🏫</div><div class="stat-val" id="st-teachers">—</div><div class="stat-lbl">Teachers</div></div>
+          <div class="stat-card blue"><div class="stat-ico">🎓</div><div class="stat-val" id="st-students">—</div><div class="stat-lbl">Students</div></div>
+          <div class="stat-card amber"><div class="stat-ico">📋</div><div class="stat-val" id="st-results">—</div><div class="stat-lbl">Results</div></div>
+          <div class="stat-card green"><div class="stat-ico">🏫</div><div class="stat-val" id="st-classes">—</div><div class="stat-lbl">Classes</div></div>
+        </div>
+        <div class="info-box">ℹ️ <strong>Active Session/Term</strong> is managed in <strong>Settings → Session</strong>. Classes are managed in <strong>Settings → Classes</strong> and are shared across teacher and student portals automatically.</div>
+        <div class="warn-box">🔐 <strong>Subject Passwords:</strong> Each subject has its own password. Teachers must enter the correct subject password to unlock and enter/edit scores. Passwords cannot be left empty.</div>
+      </div>
+
+      <!-- TEACHERS -->
+      <div class="panel" id="panel-teachers">
+        <div class="sec-hdr">
+          <h3>Manage Teachers</h3>
+          <button class="btn btn-primary btn-sm" id="add-teacher-btn">+ Add Teacher</button>
+        </div>
+        <div class="tbl-card">
+          <div class="tbl-toolbar">
+            <input type="search" id="teacher-search" placeholder="🔍 Search teachers…" />
+          </div>
+          <table>
+            <thead><tr><th>#</th><th>Name</th><th>Email</th><th>Added</th><th>Actions</th></tr></thead>
+            <tbody id="teachers-tbody"><tr><td colspan="5"><span class="skel"></span></td></tr></tbody>
+          </table>
+          <div class="load-more-wrap" id="teacher-load-more-wrap">
+            <button class="btn btn-ghost btn-sm" id="teacher-load-more-btn">Load More ↓</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- STUDENTS -->
+      <div class="panel" id="panel-students">
+        <div class="sec-hdr">
+          <h3>Manage Students</h3>
+          <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+            <select id="cls-filter" style="padding:.42rem .7rem;border:1.5px solid var(--border);border-radius:8px;font-size:.83rem;outline:none">
+              <option value="">All Classes</option>
+            </select>
+            <button class="btn btn-primary btn-sm" id="add-student-btn">+ Add Student</button>
+          </div>
+        </div>
+        <div class="tbl-card">
+          <div class="tbl-toolbar">
+            <input type="search" id="student-search" placeholder="🔍 Search students…" />
+            <button class="btn btn-ghost btn-sm" id="export-students-btn">⬇ Export CSV</button>
+          </div>
+          <table>
+            <thead><tr><th>#</th><th>Name</th><th>Student No.</th><th>Class</th><th>Gender</th><th>PIN</th><th>Actions</th></tr></thead>
+            <tbody id="students-tbody"><tr><td colspan="7"><span class="skel"></span></td></tr></tbody>
+          </table>
+          <div class="load-more-wrap" id="student-load-more-wrap">
+            <button class="btn btn-ghost btn-sm" id="student-load-more-btn">Load More ↓</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- RESULTS -->
+      <div class="panel" id="panel-results">
+        <div class="sec-hdr">
+          <h3>View Results</h3>
+          <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+            <select id="res-class" style="padding:.42rem .7rem;border:1.5px solid var(--border);border-radius:8px;font-size:.83rem;outline:none">
+              <option value="">All Classes</option>
+            </select>
+            <select id="res-term" style="padding:.42rem .7rem;border:1.5px solid var(--border);border-radius:8px;font-size:.83rem;outline:none">
+              <option value="">All Terms</option>
+              <option>First Term</option><option>Second Term</option><option>Third Term</option>
+            </select>
+            <input type="text" id="res-session" placeholder="Session e.g. 2024/2025"
+              style="padding:.42rem .7rem;border:1.5px solid var(--border);border-radius:8px;font-size:.83rem;outline:none;width:145px" />
+            <button class="btn btn-primary btn-sm" id="load-results-btn">Load</button>
+            <button class="btn btn-ghost btn-sm" id="export-results-btn">⬇ Export CSV</button>
+          </div>
+        </div>
+        <div class="tbl-card">
+          <table>
+            <thead><tr><th>#</th><th>Student Name</th><th>Number</th><th>Class</th><th>Term</th><th>Session</th><th>Subjects</th><th>Average</th><th>Submitted By</th></tr></thead>
+            <tbody id="results-tbody"><tr class="empty-row"><td colspan="9">Select filters and click Load to view results.</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- SETTINGS -->
+      <div class="panel" id="panel-settings">
+        <div class="tabs" id="settings-tabs">
+          <button class="tab-btn active" data-tab="school">🏫 School Info</button>
+          <button class="tab-btn" data-tab="session">📅 Session</button>
+          <button class="tab-btn" data-tab="classes">🏷️ Classes</button>
+          <button class="tab-btn" data-tab="assessment">📝 Assessment</button>
+          <button class="tab-btn" data-tab="subjects">📚 Subjects</button>
+          <button class="tab-btn" data-tab="remarks">🗒️ Remarks</button>
+        </div>
+
+        <!-- School Info Tab -->
+        <div class="tab-panel active" id="tab-school">
+          <div class="settings-card">
+            <h4>🏫 School Information</h4>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+              <div class="fg"><label>School Name</label><input id="s-name" type="text" /></div>
+              <div class="fg"><label>Head Teacher's Name</label><input id="s-principal" type="text" /></div>
+              <div class="fg"><label>Phone Number</label><input id="s-phone" type="text" /></div>
+              <div class="fg"><label>School Motto</label><input id="s-motto" type="text" /></div>
+            </div>
+            <div class="fg"><label>Address</label><textarea id="s-address"></textarea></div>
+            <button class="btn btn-primary" id="save-school-btn">💾 Save School Info</button>
+          </div>
+        </div>
+
+        <!-- Session Tab -->
+        <div class="tab-panel" id="tab-session">
+          <div class="settings-card">
+            <h4>📅 Active Session &amp; Term</h4>
+            <div class="info-box">Setting the active session and term will pre-fill these fields in the Teacher Portal automatically. Teachers cannot submit results for a session later than the one set here.</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+              <div class="fg"><label>Academic Session</label><input id="s-session" type="text" placeholder="e.g. 2024/2025" /></div>
+              <div class="fg"><label>Current Term</label>
+                <select id="s-term"><option>First Term</option><option>Second Term</option><option>Third Term</option></select>
+              </div>
+              <div class="fg"><label>Next Term Begins</label><input id="s-nextterm" type="date" /></div>
+              <div class="fg"><label>Term Ends / Break Date</label><input id="s-termends" type="date" /></div>
+            </div>
+            <button class="btn btn-primary" id="save-session-btn">💾 Save Session Settings</button>
+          </div>
+        </div>
+
+        <!-- Classes Tab -->
+        <div class="tab-panel" id="tab-classes">
+          <div class="settings-card">
+            <h4>🏷️ Manage Classes</h4>
+            <div class="info-box">Add or remove classes. These classes appear in all dropdowns across the teacher portal, student portal, and result checker. <strong>Deleting a class does not delete existing student or result records.</strong></div>
+            <div class="warn-box">⚠️ Class names are case-sensitive. Use consistent naming (e.g. "Primary 1", not "primary1").</div>
+
+            <div class="class-group-hdr">📌 Pre-Primary Classes</div>
+            <div id="pre-primary-chips" class="class-grid"></div>
+
+            <div class="class-group-hdr">📌 Primary Classes</div>
+            <div id="primary-chips" class="class-grid"></div>
+
+            <div style="display:flex;gap:.75rem;flex-wrap:wrap;margin-top:1.25rem;align-items:flex-end">
+              <div class="fg" style="margin:0;flex:1;min-width:160px">
+                <label>New Class Name</label>
+                <input id="new-class-name" type="text" placeholder="e.g. Primary 6" />
+              </div>
+              <div class="fg" style="margin:0">
+                <label>Group</label>
+                <select id="new-class-group">
+                  <option value="pre-primary">Pre-Primary</option>
+                  <option value="primary" selected>Primary</option>
+                </select>
+              </div>
+              <button class="btn btn-primary" id="add-class-btn">+ Add Class</button>
+            </div>
+            <div style="margin-top:1rem">
+              <button class="btn btn-primary" id="save-classes-btn">💾 Save Classes</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Assessment Tab -->
+        <div class="tab-panel" id="tab-assessment">
+          <div class="settings-card">
+            <h4>📝 Assessment Configuration</h4>
+            <div class="info-box">Configure how many tests per term. Total test marks must sum to <strong>30</strong> (CA). Exam is always <strong>70</strong>. Total = 100.</div>
+            <div style="font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin-bottom:.5rem;display:grid;grid-template-columns:1fr 100px 38px;gap:.5rem;padding:0 .1rem">
+              <span>Test / Component Name</span><span style="text-align:center">Max Score</span><span></span>
+            </div>
+            <div id="tests-container"></div>
+            <div style="display:flex;align-items:center;gap:1rem;margin-top:.75rem;flex-wrap:wrap">
+              <button class="btn btn-ghost btn-sm" id="add-test-btn">+ Add Test</button>
+              <span style="font-size:.84rem;color:var(--muted)">Total CA: <strong id="ca-total-display">0</strong>/30 &nbsp;|&nbsp; Exam: <strong>70</strong></span>
+            </div>
+            <div id="ca-warning" class="warn-box" style="display:none;margin-top:.75rem"></div>
+            <button class="btn btn-primary" id="save-assessment-btn" style="margin-top:1rem">💾 Save Assessment Config</button>
+          </div>
+        </div>
+
+        <!-- Subjects Tab -->
+        <div class="tab-panel" id="tab-subjects">
+          <div class="settings-card">
+            <h4>📚 Pre-Primary Subjects (Prep A, Prep B)</h4>
+            <div class="info-box">🔑 Each subject must have a password. Teachers must enter this password to unlock and edit scores.</div>
+            <div class="subj-list-header"><span>Subject Name</span><span>Subject Password</span><span></span></div>
+            <div id="preprimary-subjects-list" class="subj-list"></div>
+            <button class="btn btn-ghost btn-sm" id="add-preprimary-subject" style="margin-top:.75rem">+ Add Subject</button>
+          </div>
+          <div class="settings-card">
+            <h4>📚 Primary Subjects (Primary 1–5)</h4>
+            <div class="info-box">🔑 Each subject must have a password. Teachers must enter this password to unlock and edit scores.</div>
+            <div class="subj-list-header"><span>Subject Name</span><span>Subject Password</span><span></span></div>
+            <div id="primary-subjects-list" class="subj-list"></div>
+            <button class="btn btn-ghost btn-sm" id="add-primary-subject" style="margin-top:.75rem">+ Add Subject</button>
+          </div>
+          <button class="btn btn-primary" id="save-subjects-btn">💾 Save Subjects &amp; Passwords</button>
+        </div>
+
+        <!-- Remarks Tab -->
+        <div class="tab-panel" id="tab-remarks">
+          <div class="settings-card">
+            <h4>🗒️ Remarks Passwords (Per Class)</h4>
+            <div class="info-box">Each class has its own remark password. Teachers must enter the class remark password to add or edit the Teacher and Principal remarks on a student's result. Classes are loaded from your Classes settings.</div>
+            <div id="remarks-passwords-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;"></div>
+            <div style="margin-top:.75rem">
+              <button class="btn btn-primary" id="save-remarks-btn">💾 Save Remarks Passwords</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- MODALS -->
+<div class="modal-ov" id="mod-add-teacher">
+  <div class="modal">
+    <div class="modal-hdr"><h3>Add New Teacher</h3><button class="modal-close" data-close="mod-add-teacher">✕</button></div>
+    <div class="modal-body">
+      <div class="fg"><label>Full Name</label><input id="at-name" type="text" placeholder="e.g. Aisha Bello" /></div>
+      <div class="fg"><label>Email Address</label><input id="at-email" type="email" placeholder="teacher@aleeman.edu.ng" /></div>
+      <div class="fg"><label>Password (min 6 characters)</label><input id="at-pass" type="password" placeholder="Minimum 6 characters" /></div>
+    </div>
+    <div class="modal-ftr">
+      <button class="btn btn-ghost btn-sm" data-close="mod-add-teacher">Cancel</button>
+      <button class="btn btn-primary btn-sm" id="at-submit">Add Teacher</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-ov" id="mod-del-teacher">
+  <div class="modal">
+    <div class="modal-hdr"><h3>Delete Teacher</h3><button class="modal-close" data-close="mod-del-teacher">✕</button></div>
+    <div class="modal-body">
+      <p style="margin-bottom:1rem">Delete <strong id="del-t-name"></strong>? This cannot be undone.</p>
+      <div class="fg"><label>Enter teacher's password to confirm</label><input id="dt-pass" type="password" placeholder="Teacher's current password" /></div>
+    </div>
+    <div class="modal-ftr">
+      <button class="btn btn-ghost btn-sm" data-close="mod-del-teacher">Cancel</button>
+      <button class="btn btn-danger btn-sm" id="dt-submit">Delete</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-ov" id="mod-add-student">
+  <div class="modal">
+    <div class="modal-hdr"><h3 id="as-modal-title">Add New Student</h3><button class="modal-close" data-close="mod-add-student">✕</button></div>
+    <div class="modal-body">
+      <input type="hidden" id="as-edit-id" />
+      <div class="fg"><label>Full Name</label><input id="as-name" type="text" placeholder="e.g. Fatima Ibrahim" /></div>
+      <div class="fg">
+        <label>Student Number</label>
+        <div style="display:flex;gap:.5rem">
+          <input id="as-number" type="text" placeholder="e.g. AP12345" style="flex:1" />
+          <button class="btn btn-ghost btn-sm" id="gen-num-btn" type="button">Generate</button>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem">
+        <div class="fg"><label>Class</label><select id="as-class"><option value="">Select class</option></select></div>
+        <div class="fg"><label>Gender</label><select id="as-gender"><option value="">Select gender</option><option>Male</option><option>Female</option></select></div>
+      </div>
+      <div class="fg"><label>PIN / Password</label><input id="as-pin" type="text" placeholder="e.g. 1234 or surname" /></div>
+    </div>
+    <div class="modal-ftr">
+      <button class="btn btn-ghost btn-sm" data-close="mod-add-student">Cancel</button>
+      <button class="btn btn-primary btn-sm" id="as-submit">Add Student</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-ov" id="mod-del-student">
+  <div class="modal">
+    <div class="modal-hdr"><h3>Delete Student</h3><button class="modal-close" data-close="mod-del-student">✕</button></div>
+    <div class="modal-body"><p>Delete <strong id="del-s-name"></strong>? Their result records will remain, but their login access will be removed.</p></div>
+    <div class="modal-ftr">
+      <button class="btn btn-ghost btn-sm" data-close="mod-del-student">Cancel</button>
+      <button class="btn btn-danger btn-sm" id="ds-submit">Delete Student</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script type="module">
+import { initializeApp, getApps, getApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut,
+         createUserWithEmailAndPassword, deleteUser }
+  from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore, collection, doc, addDoc, setDoc, getDoc, getDocs,
+         deleteDoc, updateDoc, query, where, orderBy, serverTimestamp,
+         limit, startAfter, writeBatch, getCountFromServer }
+  from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const FB_CONFIG = {
+  apiKey:"AIzaSyAVD2x5XR55f_6GUBCNcfUcbT0LiTiw8VU",
+  authDomain:"aleeman-primary.firebaseapp.com",
+  projectId:"aleeman-primary",
+  storageBucket:"aleeman-primary.firebasestorage.app",
+  messagingSenderId:"120804301463",
+  appId:"1:120804301463:web:d1a84b22edd67bd36e67d2"
+};
+const app  = getApps().length ? getApp() : initializeApp(FB_CONFIG);
+const auth = getAuth(app);
+const db   = getFirestore(app);
+
+const PAGE_SIZE = 20;
+let adminData={}, teacherLastDoc=null, teacherHasMore=false, teacherFullCache=[];
+let studentLastDoc=null, studentHasMore=false, studentFullCache=[];
+let resultsCache=[], pendingDelTeacher=null, pendingDelStudent=null;
+let isEditingStudent=false, testsConfig=[], usedNums=new Set();
+let secondaryAppCounter=0, signingOut=false, teacherLoading=false, studentLoading=false;
+let currentCls='';
+// Class state
+let classesData={ prePrimary:['Nursery 1','Nursery 2','Prep A','Prep B'], primary:['Primary 1','Primary 2','Primary 3','Primary 4','Primary 5'] };
+
+const $ = id => document.getElementById(id);
+const esc = s => String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const safe = s => String(s??'').replace(/'/g,"\\'");
+
+function toast(msg,type='success',dur=3500){ const t=$('toast'); t.textContent=msg; t.className=`show ${type}`; setTimeout(()=>{t.className='';},dur); }
+function setBtn(btn,loading){ if(!btn)return; if(loading){btn.dataset.orig=btn.innerHTML;btn.innerHTML='<span class="spinner"></span> Please wait…';btn.disabled=true;}else{btn.innerHTML=btn.dataset.orig||btn.innerHTML;btn.disabled=false;delete btn.dataset.orig;} }
+function openModal(id){ $(id).classList.add('open'); }
+function closeModal(id){ $(id).classList.remove('open'); }
+function fmtDate(ts){ if(!ts)return'—'; try{const d=ts.toDate?ts.toDate():new Date(ts);return d.toLocaleDateString('en-NG',{day:'2-digit',month:'short',year:'numeric'});}catch{return'—';} }
+
+function resultDocId(num,cls,term,session){
+  const s=v=>String(v??'').trim().toLowerCase().replace(/\s+/g,'-').replace(/[\/\\]/g,'-').replace(/[^a-z0-9\-]/g,'');
+  return `${s(num)}__${s(cls)}__${s(term)}__${s(session)}`;
+}
+
+function getAllClasses(){ return [...classesData.prePrimary, ...classesData.primary]; }
+
+function skeletonRows(tbodyId,cols,rows=5){
+  $(tbodyId).innerHTML=Array(rows).fill(`<tr>${Array(cols).fill('<td><span class="skel skel-sm"></span></td>').join('')}</tr>`).join('');
+}
+function createSecondaryAuth(){ const name=`sec-${++secondaryAppCounter}-${Date.now()}`; return getAuth(initializeApp(FB_CONFIG,name)); }
+
+document.querySelectorAll('[data-close]').forEach(el=>el.addEventListener('click',()=>closeModal(el.dataset.close)));
+document.querySelectorAll('.modal-ov').forEach(ov=>ov.addEventListener('click',e=>{if(e.target===ov)ov.classList.remove('open');}));
+$('top-date').textContent=new Date().toLocaleDateString('en-NG',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
+
+function showLogin(){ $('login-page').style.display='flex'; $('dashboard-page').style.display='none'; $('auth-loading').style.display='none'; }
+function showDash(){  $('login-page').style.display='none'; $('dashboard-page').style.display='block'; $('auth-loading').style.display='none'; }
+function showLoginErr(msg){ const e=$('login-err'); e.textContent=msg; e.classList.add('show'); }
+function clearLoginErr(){ $('login-err').classList.remove('show'); }
+
+onAuthStateChanged(auth, async user=>{
+  if(signingOut)return;
+  if(user){
+    const teacherDoc=await getDoc(doc(db,'teachers',user.uid));
+    if(teacherDoc.exists()){ await signOut(auth); showLogin(); showLoginErr('Access denied. Use the Teacher Portal instead.'); return; }
+    $('sb-admin-name').textContent=user.displayName||user.email;
+    showDash(); loadStats(); loadTeachers(); loadSettings();
+  } else { showLogin(); }
+});
+
+async function doLogin(){
+  clearLoginErr();
+  const email=$('l-email').value.trim(), pass=$('l-pass').value, btn=$('login-btn');
+  if(!email||!pass){showLoginErr('Please fill in all fields.');return;}
+  setBtn(btn,true);
+  try{ await signInWithEmailAndPassword(auth,email,pass); }
+  catch(err){
+    const m={'auth/invalid-credential':'Invalid email or password.','auth/user-not-found':'No account found.','auth/wrong-password':'Incorrect password.','auth/too-many-requests':'Too many attempts. Try later.'};
+    showLoginErr(m[err.code]||'Login failed.'); setBtn(btn,false);
+  }
+}
+$('admin-login-pw-eye').addEventListener('click',function(){ const inp=$('l-pass'); const show=inp.type==='password'; inp.type=show?'text':'password'; this.textContent=show?'🙈':'👁️'; });
+window._toggleSubjPw=btn=>{ const inp=btn.previousElementSibling; if(!inp)return; const show=inp.type==='password'; inp.type=show?'text':'password'; btn.textContent=show?'🙈':'👁️'; };
+$('login-btn').addEventListener('click',doLogin);
+['l-email','l-pass'].forEach(id=>$(id).addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();}));
+
+$('logout-btn').addEventListener('click',async()=>{ signingOut=true; try{await signOut(auth);toast('Signed out.','info');}catch{} signingOut=false; showLogin(); });
+
+const panelTitles={overview:'Overview',teachers:'Teachers',students:'Students',results:'Results',settings:'Settings'};
+document.querySelectorAll('.nav-link').forEach(link=>{
+  link.addEventListener('click',()=>{
+    document.querySelectorAll('.nav-link').forEach(l=>l.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+    link.classList.add('active');
+    const id=link.dataset.panel;
+    $(`panel-${id}`).classList.add('active');
+    $('page-title').textContent=panelTitles[id]||id;
+    if(id==='students'){studentLastDoc=null;studentFullCache=[];loadStudents();}
+    if(id==='teachers'){teacherLastDoc=null;teacherFullCache=[];loadTeachers();}
+    if(id==='results') $('results-tbody').innerHTML='<tr class="empty-row"><td colspan="9">Select filters and click Load.</td></tr>';
+    if(id==='settings') loadSettings();
+    $('sidebar').classList.remove('open');
+  });
+});
+$('menu-toggle').addEventListener('click',()=>$('sidebar').classList.toggle('open'));
+
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    $(`tab-${btn.dataset.tab}`).classList.add('active');
+    if(btn.dataset.tab==='remarks') renderRemarksPasswords();
+  });
+});
+
+async function loadStats(){
+  try{
+    const [t,s,r]=await Promise.all([getCountFromServer(collection(db,'teachers')),getCountFromServer(collection(db,'students')),getCountFromServer(collection(db,'results'))]);
+    $('st-teachers').textContent=t.data().count;
+    $('st-students').textContent=s.data().count;
+    $('st-results').textContent=r.data().count;
+    $('st-classes').textContent=getAllClasses().length;
+  }catch(err){console.error('Stats:',err);}
+}
+
+/* ── Classes ── */
+function renderClassChips(){
+  const ppEl=$('pre-primary-chips'), pEl=$('primary-chips');
+  ppEl.innerHTML=classesData.prePrimary.length?classesData.prePrimary.map(c=>`
+    <div class="class-chip"><span class="chip-label">${esc(c)}</span><button class="chip-del" onclick="window._deleteClass('pre-primary','${safe(c)}')" title="Remove class">✕</button></div>`).join('')
+    :'<span style="color:var(--muted);font-size:.84rem">No pre-primary classes.</span>';
+  pEl.innerHTML=classesData.primary.length?classesData.primary.map(c=>`
+    <div class="class-chip"><span class="chip-label">${esc(c)}</span><button class="chip-del" onclick="window._deleteClass('primary','${safe(c)}')" title="Remove class">✕</button></div>`).join('')
+    :'<span style="color:var(--muted);font-size:.84rem">No primary classes.</span>';
+}
+window._deleteClass=(group,name)=>{
+  if(!confirm(`Remove class "${name}"? Existing students/results won't be deleted.`))return;
+  if(group==='pre-primary') classesData.prePrimary=classesData.prePrimary.filter(c=>c!==name);
+  else classesData.primary=classesData.primary.filter(c=>c!==name);
+  renderClassChips();
+  toast(`"${name}" removed. Click Save Classes to confirm.`,'info');
+};
+$('add-class-btn').addEventListener('click',()=>{
+  const name=$('new-class-name').value.trim(), group=$('new-class-group').value;
+  if(!name){toast('Enter a class name.','error');return;}
+  const all=getAllClasses();
+  if(all.some(c=>c.toLowerCase()===name.toLowerCase())){toast('Class already exists.','error');return;}
+  if(group==='pre-primary') classesData.prePrimary.push(name);
+  else classesData.primary.push(name);
+  $('new-class-name').value='';
+  renderClassChips();
+  toast(`"${name}" added. Click Save Classes to confirm.`,'info');
+});
+$('save-classes-btn').addEventListener('click',async()=>{
+  const btn=$('save-classes-btn'); setBtn(btn,true);
+  try{
+    await setDoc(doc(db,'settings','classes'),{prePrimary:classesData.prePrimary, primary:classesData.primary, updatedAt:serverTimestamp()});
+    toast('Classes saved!');
+    populateClassDropdowns();
+    $('st-classes').textContent=getAllClasses().length;
+  }catch(err){toast('Failed to save classes.','error');console.error(err);}
+  finally{setBtn(btn,false);}
+});
+
+function populateClassDropdowns(){
+  const all=getAllClasses();
+  // cls-filter
+  const clf=$('cls-filter'); const clfVal=clf.value; clf.innerHTML='<option value="">All Classes</option>'+all.map(c=>`<option>${esc(c)}</option>`).join('');clf.value=clfVal;
+  // res-class
+  const rc=$('res-class'); const rcVal=rc.value; rc.innerHTML='<option value="">All Classes</option>'+all.map(c=>`<option>${esc(c)}</option>`).join('');rc.value=rcVal;
+  // as-class
+  const asc=$('as-class'); const ascVal=asc.value; asc.innerHTML='<option value="">Select class</option>'+all.map(c=>`<option>${esc(c)}</option>`).join('');asc.value=ascVal;
+}
+
+/* ── Settings ── */
+async function loadSettings(){
+  try{
+    const [schoolSnap,sessSnap,assessSnap,classesSnap,subjSnap,passSnap,remarkSnap]=await Promise.all([
+      getDoc(doc(db,'settings','school')),
+      getDoc(doc(db,'settings','session')),
+      getDoc(doc(db,'settings','assessment')),
+      getDoc(doc(db,'settings','classes')),
+      getDoc(doc(db,'settings','subjects')),
+      getDoc(doc(db,'settings','subjectPasswords')),
+      getDoc(doc(db,'settings','remarkPasswords')),
+    ]);
+    if(schoolSnap.exists()){const d=schoolSnap.data();$('s-name').value=d.name||'';$('s-principal').value=d.principal||'';$('s-phone').value=d.phone||'';$('s-motto').value=d.motto||'';$('s-address').value=d.address||'';}
+    if(sessSnap.exists()){const d=sessSnap.data();$('s-session').value=d.activeSession||'';$('s-term').value=d.activeTerm||'First Term';$('s-nextterm').value=d.nextTermBegins||'';$('s-termends').value=d.termEnds||'';updateSessionDisplay(d.activeSession,d.activeTerm);}
+    if(classesSnap.exists()){
+      classesData={prePrimary:classesSnap.data().prePrimary||['Nursery 1','Nursery 2','Prep A','Prep B'], primary:classesSnap.data().primary||['Primary 1','Primary 2','Primary 3','Primary 4','Primary 5']};
+    }
+    renderClassChips(); populateClassDropdowns();
+    testsConfig=assessSnap.exists()?(assessSnap.data().tests||defaultTests()):defaultTests();
+    renderTestsConfig();
+    const ppNames=subjSnap.exists()?(subjSnap.data().prePrimary||defaultPrePrimary()):defaultPrePrimary();
+    const pNames=subjSnap.exists()?(subjSnap.data().primary||defaultPrimary()):defaultPrimary();
+    const ppPass=passSnap.exists()?(passSnap.data().prePrimary||{}): {};
+    const pPass=passSnap.exists()?(passSnap.data().primary||{}): {};
+    renderSubjects('preprimary-subjects-list',ppNames,ppPass);
+    renderSubjects('primary-subjects-list',pNames,pPass);
+    if(remarkSnap.exists()){window._remarkPassData=remarkSnap.data()||{};}else{window._remarkPassData={};}
+    renderRemarksPasswords();
+  }catch(err){console.error('Settings:',err);toast('Could not load settings.','error');}
+}
+function updateSessionDisplay(session,term){if(session&&term)$('session-display').textContent=`${term} · ${session}`;}
+function defaultTests(){return[{id:'t1',name:'1st Test',max:10},{id:'t2',name:'2nd Test',max:10},{id:'t3',name:'3rd Test',max:10}];}
+function defaultPrePrimary(){return['English Language','Mathematics','Phonics','Handwriting','Verbal Reasoning','Social Habits','Rhymes & Songs','Fine Arts','Physical Education'];}
+function defaultPrimary(){return['English Language','Mathematics','Basic Science','Social Studies','Civic Education','Agricultural Science','Computer Studies','Islamic Religious Studies','Arabic Language','Verbal Reasoning','Quantitative Reasoning','Cultural & Creative Arts','Physical & Health Education'];}
+
+/* ── Assessment config ── */
+function renderTestsConfig(){
+  const c=$('tests-container');
+  c.innerHTML=testsConfig.map((t,i)=>`
+    <div class="test-row" id="trow-${i}">
+      <input type="text" value="${esc(t.name)}" placeholder="e.g. 1st Test" data-idx="${i}" data-field="name" onchange="window._updateTest(this)" />
+      <input type="number" value="${t.max}" min="1" max="30" data-idx="${i}" data-field="max" onchange="window._updateTest(this)" />
+      <button class="test-remove" onclick="window._removeTest(${i})" title="Remove">✕</button>
+    </div>`).join('');
+  updateCATotalDisplay();
+}
+window._updateTest=el=>{const i=+el.dataset.idx,f=el.dataset.field;if(f==='max')testsConfig[i].max=Math.max(1,Math.min(30,+el.value||0));else testsConfig[i].name=el.value;updateCATotalDisplay();};
+window._removeTest=i=>{testsConfig.splice(i,1);renderTestsConfig();};
+$('add-test-btn').addEventListener('click',()=>{if(testsConfig.length>=6){toast('Maximum 6 test components.','error');return;}testsConfig.push({id:`t${Date.now()}`,name:`Test ${testsConfig.length+1}`,max:10});renderTestsConfig();});
+function updateCATotalDisplay(){
+  const total=testsConfig.reduce((s,t)=>s+Number(t.max||0),0);
+  const el=$('ca-total-display');el.textContent=total;el.style.color=total===30?'var(--p2)':'var(--red)';
+  const w=$('ca-warning');
+  if(total!==30){w.textContent=`⚠️ CA marks must equal exactly 30. Currently: ${total}`;w.style.display='block';}else{w.style.display='none';}
+}
+$('save-assessment-btn').addEventListener('click',async()=>{
+  const total=testsConfig.reduce((s,t)=>s+Number(t.max||0),0);
+  if(total!==30){toast('CA total must equal 30.','error');return;}
+  const btn=$('save-assessment-btn');setBtn(btn,true);
+  try{await setDoc(doc(db,'settings','assessment'),{tests:testsConfig,caMax:30,examMax:70,updatedAt:serverTimestamp()});toast('Assessment configuration saved!');}
+  catch(err){toast('Failed to save.','error');}finally{setBtn(btn,false);}
+});
+
+/* ── Remarks passwords ── */
+function renderRemarksPasswords(){
+  const all=getAllClasses();
+  const rp=window._remarkPassData||{};
+  $('remarks-passwords-grid').innerHTML=all.map(c=>`
+    <div class="fg"><label>${esc(c)}</label><input class="subj-pass-inp" type="password" id="rp-${esc(c.replace(/\s/g,'_'))}" placeholder="Password for ${esc(c)}" value="${esc(rp[c]||'')}" autocomplete="new-password" /></div>
+  `).join('');
+}
+$('save-remarks-btn').addEventListener('click',async()=>{
+  const btn=$('save-remarks-btn');setBtn(btn,true);
+  try{
+    const rp={};
+    getAllClasses().forEach(c=>{const id=`rp-${c.replace(/\s/g,'_')}`;const v=(document.getElementById(id)?.value||'').trim();if(v)rp[c]=v;});
+    await setDoc(doc(db,'settings','remarkPasswords'),{...rp,updatedAt:serverTimestamp()});
+    window._remarkPassData={...rp};
+    toast('Remarks passwords saved!');
+  }catch(err){console.error(err);toast('Failed to save remarks passwords.','error');}finally{setBtn(btn,false);}
+});
+
+/* ── School info ── */
+$('save-school-btn').addEventListener('click',async()=>{
+  const btn=$('save-school-btn');setBtn(btn,true);
+  try{await setDoc(doc(db,'settings','school'),{name:$('s-name').value.trim(),principal:$('s-principal').value.trim(),phone:$('s-phone').value.trim(),motto:$('s-motto').value.trim(),address:$('s-address').value.trim(),updatedAt:serverTimestamp()});toast('School information saved!');}
+  catch(err){toast('Failed to save.','error');}finally{setBtn(btn,false);}
+});
+
+/* ── Session ── */
+$('save-session-btn').addEventListener('click',async()=>{
+  const btn=$('save-session-btn');setBtn(btn,true);
+  const session=$('s-session').value.trim(),term=$('s-term').value;
+  if(session&&!/^\d{4}\/\d{4}$/.test(session)){toast('Session must be in format YYYY/YYYY','error');setBtn(btn,false);return;}
+  if(session){const[y1,y2]=session.split('/').map(Number);if(y2!==y1+1){toast('End year must be exactly one year after start year.','error');setBtn(btn,false);return;}}
+  try{
+    await setDoc(doc(db,'settings','session'),{activeSession:session,activeTerm:term,nextTermBegins:$('s-nextterm').value,termEnds:$('s-termends').value,updatedAt:serverTimestamp()});
+    updateSessionDisplay(session,term);toast('Session settings saved!');
+  }catch(err){toast('Failed to save.','error');}finally{setBtn(btn,false);}
+});
+
+/* ── Subjects ── */
+function renderSubjects(containerId,nameList,passMap){
+  $(containerId).innerHTML=nameList.map(s=>`
+    <div class="subj-item">
+      <input type="text" class="subj-name-inp" value="${esc(s)}" placeholder="Subject name" />
+      <div class="subj-pw-wrap">
+        <input type="password" class="subj-pass-inp" value="${esc(passMap[s]||'')}" placeholder="Subject password (required)" autocomplete="new-password" />
+        <button class="subj-pw-eye" type="button" onclick="window._toggleSubjPw(this)" title="Show/hide">👁️</button>
+      </div>
+      <button class="subj-remove" onclick="if(confirm('Remove this subject?'))this.parentElement.remove()" title="Remove">✕</button>
+    </div>`).join('');
+}
+function getSubjectsAndPasswords(containerId){
+  const names=[],passes={};let error=null;
+  document.querySelectorAll(`#${containerId} .subj-item`).forEach(item=>{
+    const name=item.querySelector('.subj-name-inp').value.trim();
+    const pass=item.querySelector('.subj-pass-inp').value.trim();
+    if(!name)return;
+    if(!pass){item.querySelector('.subj-pass-inp').classList.add('missing');if(!error)error=`Subject "${name}" must have a password.`;return;}
+    item.querySelector('.subj-pass-inp').classList.remove('missing');
+    names.push(name);passes[name]=pass;
+  });
+  return{names,passes,error};
+}
+function addSubjectItem(containerId){
+  const item=document.createElement('div');item.className='subj-item';
+  item.innerHTML=`<input type="text" class="subj-name-inp" placeholder="Subject name" />
+    <div class="subj-pw-wrap"><input type="password" class="subj-pass-inp" placeholder="Subject password (required)" autocomplete="new-password" /><button class="subj-pw-eye" type="button" onclick="window._toggleSubjPw(this)" title="Show/hide">👁️</button></div>
+    <button class="subj-remove" onclick="if(confirm('Remove this subject?'))this.parentElement.remove()" title="Remove">✕</button>`;
+  $(containerId).appendChild(item);item.querySelector('.subj-name-inp').focus();
+}
+$('add-preprimary-subject').addEventListener('click',()=>addSubjectItem('preprimary-subjects-list'));
+$('add-primary-subject').addEventListener('click',()=>addSubjectItem('primary-subjects-list'));
+$('save-subjects-btn').addEventListener('click',async()=>{
+  const btn=$('save-subjects-btn');setBtn(btn,true);
+  const pp=getSubjectsAndPasswords('preprimary-subjects-list');
+  const p=getSubjectsAndPasswords('primary-subjects-list');
+  if(pp.error||p.error){toast(pp.error||p.error,'error');setBtn(btn,false);return;}
+  try{
+    const batch=writeBatch(db);
+    batch.set(doc(db,'settings','subjects'),{prePrimary:pp.names,primary:p.names,updatedAt:serverTimestamp()});
+    batch.set(doc(db,'settings','subjectPasswords'),{prePrimary:pp.passes,primary:p.passes,updatedAt:serverTimestamp()});
+    await batch.commit();toast('Subjects and passwords saved!');
+  }catch(err){console.error(err);toast('Failed to save subjects.','error');}finally{setBtn(btn,false);}
+});
+
+/* ── TEACHERS ── */
+async function loadTeachers(loadMore=false){
+  if(teacherLoading)return;teacherLoading=true;
+  const btn=$('teacher-load-more-btn');
+  if(!loadMore){teacherLastDoc=null;teacherFullCache=[];skeletonRows('teachers-tbody',5,5);}
+  else{setBtn(btn,true);}
+  try{
+    let q=query(collection(db,'teachers'),orderBy('createdAt','desc'),limit(PAGE_SIZE+1));
+    if(loadMore&&teacherLastDoc)q=query(collection(db,'teachers'),orderBy('createdAt','desc'),startAfter(teacherLastDoc),limit(PAGE_SIZE+1));
+    const snap=await getDocs(q);
+    teacherHasMore=snap.docs.length>PAGE_SIZE;
+    const docs=snap.docs.slice(0,PAGE_SIZE);
+    if(docs.length)teacherLastDoc=docs[docs.length-1];
+    const newOnes=docs.map(d=>({id:d.id,...d.data()}));
+    if(!loadMore)teacherFullCache=newOnes;else teacherFullCache=[...teacherFullCache,...newOnes];
+    renderTeachers(teacherFullCache);
+    const wrap=$('teacher-load-more-wrap');if(teacherHasMore)wrap.classList.add('visible');else wrap.classList.remove('visible');
+  }catch(err){console.error(err);$('teachers-tbody').innerHTML='<tr class="empty-row"><td colspan="5">Error loading teachers.</td></tr>';}
+  finally{teacherLoading=false;if(btn)setBtn(btn,false);}
+}
+function renderTeachers(list){
+  if(!list.length){$('teachers-tbody').innerHTML='<tr class="empty-row"><td colspan="5">No teachers found.</td></tr>';return;}
+  $('teachers-tbody').innerHTML=list.map((t,i)=>`<tr>
+    <td>${i+1}</td><td><strong>${esc(t.name||'—')}</strong></td><td>${esc(t.email||'—')}</td>
+    <td>${fmtDate(t.createdAt)}</td>
+    <td><div class="act-btns"><button class="btn btn-danger btn-sm" onclick="window._openDelTeacher('${esc(t.id)}','${safe(t.name)}','${safe(t.email)}')">Delete</button></div></td>
+  </tr>`).join('');
+}
+$('teacher-search').addEventListener('input',e=>{const q=e.target.value.toLowerCase();renderTeachers(teacherFullCache.filter(t=>(t.name||'').toLowerCase().includes(q)||(t.email||'').toLowerCase().includes(q)));});
+$('teacher-load-more-btn').addEventListener('click',()=>loadTeachers(true));
+
+$('add-teacher-btn').addEventListener('click',()=>{['at-name','at-email','at-pass'].forEach(id=>$(id).value='');openModal('mod-add-teacher');});
+$('at-submit').addEventListener('click',async()=>{
+  const btn=$('at-submit'),name=$('at-name').value.trim(),email=$('at-email').value.trim(),pass=$('at-pass').value;
+  if(!name||!email||!pass){toast('Fill in all fields.','error');return;}
+  if(pass.length<6){toast('Password must be at least 6 characters.','error');return;}
+  setBtn(btn,true);
+  try{
+    const secAuth=createSecondaryAuth();
+    const cred=await createUserWithEmailAndPassword(secAuth,email,pass);
+    await signOut(secAuth);
+    await setDoc(doc(db,'teachers',cred.user.uid),{uid:cred.user.uid,name,email,role:'teacher',createdAt:serverTimestamp()});
+    toast(`Teacher "${name}" added!`);closeModal('mod-add-teacher');teacherLastDoc=null;teacherFullCache=[];loadTeachers();loadStats();
+  }catch(err){const m={'auth/email-already-in-use':'Email already registered.','auth/weak-password':'Password is too weak.'};toast(m[err.code]||'Failed to add teacher.','error');}finally{setBtn(btn,false);}
+});
+window._openDelTeacher=(id,name,email)=>{pendingDelTeacher={id,name,email};$('del-t-name').textContent=name;$('dt-pass').value='';openModal('mod-del-teacher');};
+$('dt-submit').addEventListener('click',async()=>{
+  if(!pendingDelTeacher)return;
+  const btn=$('dt-submit'),pass=$('dt-pass').value;
+  if(!pass){toast('Enter teacher password to confirm.','error');return;}
+  setBtn(btn,true);
+  try{
+    const secAuth=createSecondaryAuth();
+    const cred=await signInWithEmailAndPassword(secAuth,pendingDelTeacher.email,pass);
+    await deleteUser(cred.user);
+    await deleteDoc(doc(db,'teachers',pendingDelTeacher.id));
+    toast('Teacher deleted.');closeModal('mod-del-teacher');pendingDelTeacher=null;teacherLastDoc=null;teacherFullCache=[];loadTeachers();loadStats();
+  }catch(err){const m={'auth/wrong-password':'Incorrect password.','auth/invalid-credential':'Incorrect password.'};toast(m[err.code]||'Failed to delete.','error');}finally{setBtn(btn,false);}
+});
+
+/* ── STUDENTS ── */
+async function loadStudents(loadMore=false){
+  if(studentLoading)return;studentLoading=true;
+  const btn=$('student-load-more-btn');
+  currentCls=$('cls-filter').value;
+  if(!loadMore){studentLastDoc=null;studentFullCache=[];skeletonRows('students-tbody',7,6);}
+  else{setBtn(btn,true);}
+  try{
+    let q=currentCls
+      ?query(collection(db,'students'),where('class','==',currentCls),orderBy('name'),limit(PAGE_SIZE+1))
+      :query(collection(db,'students'),orderBy('name'),limit(PAGE_SIZE+1));
+    if(loadMore&&studentLastDoc){
+      q=currentCls
+        ?query(collection(db,'students'),where('class','==',currentCls),orderBy('name'),startAfter(studentLastDoc),limit(PAGE_SIZE+1))
+        :query(collection(db,'students'),orderBy('name'),startAfter(studentLastDoc),limit(PAGE_SIZE+1));
+    }
+    const snap=await getDocs(q);
+    studentHasMore=snap.docs.length>PAGE_SIZE;
+    const docs=snap.docs.slice(0,PAGE_SIZE);
+    if(docs.length)studentLastDoc=docs[docs.length-1];
+    docs.forEach(d=>usedNums.add(d.data().number));
+    const newOnes=docs.map(d=>({id:d.id,...d.data()}));
+    if(!loadMore)studentFullCache=newOnes;else studentFullCache=[...studentFullCache,...newOnes];
+    renderStudents(studentFullCache);
+    const wrap=$('student-load-more-wrap');if(studentHasMore)wrap.classList.add('visible');else wrap.classList.remove('visible');
+  }catch(err){console.error(err);$('students-tbody').innerHTML=`<tr class="empty-row"><td colspan="7">Error: ${esc(err.message)}</td></tr>`;}
+  finally{studentLoading=false;if(btn)setBtn(btn,false);}
+}
+function renderStudents(list){
+  if(!list.length){$('students-tbody').innerHTML='<tr class="empty-row"><td colspan="7">No students found.</td></tr>';return;}
+  $('students-tbody').innerHTML=list.map((s,i)=>`<tr>
+    <td>${i+1}</td><td><strong>${esc(s.name||'—')}</strong></td>
+    <td><code>${esc(s.number||'—')}</code></td>
+    <td><span class="badge b-indigo">${esc(s.class||'—')}</span></td>
+    <td>${esc(s.gender||'—')}</td><td><code>${esc(s.password||'—')}</code></td>
+    <td><div class="act-btns">
+      <button class="btn btn-blue btn-sm" onclick="window._openEditStudent('${esc(s.id)}')">Edit</button>
+      <button class="btn btn-danger btn-sm" onclick="window._openDelStudent('${esc(s.id)}','${safe(s.name)}')">Delete</button>
+    </div></td>
+  </tr>`).join('');
+}
+$('cls-filter').addEventListener('change',()=>{studentLastDoc=null;studentFullCache=[];loadStudents();});
+$('student-search').addEventListener('input',e=>{const q=e.target.value.toLowerCase();renderStudents(studentFullCache.filter(s=>(s.name||'').toLowerCase().includes(q)||(s.number||'').toLowerCase().includes(q)));});
+$('student-load-more-btn').addEventListener('click',()=>loadStudents(true));
+
+$('gen-num-btn').addEventListener('click',()=>{let num;do{num='AP'+String(Math.floor(10000+Math.random()*90000));}while(usedNums.has(num));$('as-number').value=num;$('as-number').readOnly=true;});
+
+$('add-student-btn').addEventListener('click',()=>{
+  isEditingStudent=false;$('as-modal-title').textContent='Add New Student';$('as-submit').textContent='Add Student';
+  $('as-edit-id').value='';['as-name','as-number','as-pin'].forEach(id=>$(id).value='');
+  $('as-class').value='';$('as-gender').value='';$('as-number').readOnly=false;
+  openModal('mod-add-student');
+});
+window._openEditStudent=id=>{
+  const s=studentFullCache.find(x=>x.id===id);if(!s)return;
+  isEditingStudent=true;$('as-modal-title').textContent='Edit Student';$('as-submit').textContent='Save Changes';
+  $('as-edit-id').value=id;$('as-name').value=s.name||'';$('as-number').value=s.number||'';
+  $('as-class').value=s.class||'';$('as-gender').value=s.gender||'';$('as-pin').value=s.password||'';
+  $('as-number').readOnly=true;openModal('mod-add-student');
+};
+$('as-submit').addEventListener('click',async()=>{
+  const btn=$('as-submit'),name=$('as-name').value.trim(),number=$('as-number').value.trim(),cls=$('as-class').value,gender=$('as-gender').value,pin=$('as-pin').value.trim();
+  if(!name||!number||!cls||!gender||!pin){toast('Fill in all fields.','error');return;}
+  setBtn(btn,true);
+  try{
+    if(isEditingStudent){
+      await updateDoc(doc(db,'students',$('as-edit-id').value),{name,class:cls,gender,password:pin,updatedAt:serverTimestamp()});
+      toast(`Student "${name}" updated!`);
+    }else{
+      const existing=await getDocs(query(collection(db,'students'),where('number','==',number)));
+      if(!existing.empty){toast('Student number already exists.','error');setBtn(btn,false);return;}
+      await addDoc(collection(db,'students'),{name,number,class:cls,gender,password:pin,createdAt:serverTimestamp()});
+      usedNums.add(number);toast(`Student "${name}" added!`);
+    }
+    closeModal('mod-add-student');studentLastDoc=null;studentFullCache=[];loadStudents();loadStats();
+  }catch(err){toast('Failed to save student.','error');}finally{setBtn(btn,false);}
+});
+window._openDelStudent=(id,name)=>{pendingDelStudent={id,name};$('del-s-name').textContent=name;openModal('mod-del-student');};
+$('ds-submit').addEventListener('click',async()=>{
+  if(!pendingDelStudent)return;
+  const btn=$('ds-submit');setBtn(btn,true);
+  try{await deleteDoc(doc(db,'students',pendingDelStudent.id));toast('Student deleted.');closeModal('mod-del-student');pendingDelStudent=null;studentLastDoc=null;studentFullCache=[];loadStudents();loadStats();}
+  catch(err){toast('Failed to delete.','error');}finally{setBtn(btn,false);}
+});
+$('export-students-btn').addEventListener('click',()=>{
+  if(!studentFullCache.length){toast('No students to export.','error');return;}
+  const rows=[['#','Name','Number','Class','Gender','PIN']];
+  studentFullCache.forEach((s,i)=>rows.push([i+1,s.name,s.number,s.class,s.gender,s.password]));
+  downloadCSV(rows,'students_export.csv');toast('Exported!');
+});
+
+/* ── RESULTS ── */
+$('load-results-btn').addEventListener('click',async()=>{
+  const cls=$('res-class').value,term=$('res-term').value,session=$('res-session').value.trim();
+  const tb=$('results-tbody');tb.innerHTML='<tr class="empty-row"><td colspan="9">Loading…</td></tr>';
+  try{
+    const constraints=[];
+    if(cls)constraints.push(where('class','==',cls));
+    if(term)constraints.push(where('term','==',term));
+    if(session)constraints.push(where('session','==',session));
+    constraints.push(orderBy('studentName'));
+    const snap=await getDocs(query(collection(db,'results'),...constraints));
+    if(snap.empty){tb.innerHTML='<tr class="empty-row"><td colspan="9">No results found.</td></tr>';return;}
+    resultsCache=snap.docs.map(d=>({id:d.id,...d.data()}));
+    tb.innerHTML=resultsCache.map((r,i)=>`<tr>
+      <td>${i+1}</td><td><strong>${esc(r.studentName||'—')}</strong></td>
+      <td><code>${esc(r.studentNumber||'—')}</code></td>
+      <td><span class="badge b-indigo">${esc(r.class||'—')}</span></td>
+      <td>${esc(r.term||'—')}</td><td>${esc(r.session||'—')}</td>
+      <td>${r.subjects?r.subjects.length:'—'}</td>
+      <td><strong>${r.average!=null?r.average.toFixed(1)+'%':'—'}</strong></td>
+      <td>${esc(r.submittedBy||'—')}</td>
+    </tr>`).join('');
+  }catch(err){tb.innerHTML=`<tr class="empty-row"><td colspan="9">Error: ${esc(err.message)}<br><small>You may need a Firestore composite index.</small></td></tr>`;}
+});
+$('export-results-btn').addEventListener('click',()=>{
+  if(!resultsCache.length){toast('Load results first.','error');return;}
+  const rows=[['Name','Number','Class','Term','Session','Subjects','Average','Submitted By']];
+  resultsCache.forEach(r=>rows.push([r.studentName,r.studentNumber,r.class,r.term,r.session,(r.subjects||[]).length,r.average!=null?r.average.toFixed(1):'—',r.submittedBy]));
+  downloadCSV(rows,'results_export.csv');toast('Results exported!');
+});
+
+function downloadCSV(rows,filename){
+  const csv=rows.map(r=>r.map(v=>`"${String(v??'').replace(/"/g,'""')}"`).join(',')).join('\n');
+  const a=document.createElement('a');a.href='data:text/csv;charset=utf-8,\uFEFF'+encodeURIComponent(csv);a.download=filename;a.click();
+}
+</script>
+</body>
+</html>

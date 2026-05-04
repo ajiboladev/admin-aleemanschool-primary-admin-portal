@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=3.0, user-scalable=no, viewport-fit=cover" />
+  <title>Admin Signup — Aleeman Primary School Portal</title>
+  <link rel="icon" type="image/x-icon" href="aleeman-logo.png" />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --p1:#1a237e; --p2:#283593; --p3:#3949ab; --p4:#5c6bc0; --p5:#e8eaf6;
+      --red:#c62828; --red-l:#ffebee;
+      --green:#1a5c2a; --green-l:#d8f3dc;
+      --text:#111827; --muted:#4b5563; --border:#c5cae9; --bg:#f0f2ff; --white:#fff;
+    }
+    * {
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  box-sizing: border-box;
+}
+    * { -webkit-user-select:none; -ms-user-select:none; user-select:none; }
+    body {
+      font-family:'DM Sans',system-ui,sans-serif;
+      background:linear-gradient(135deg,var(--p1),var(--p2),var(--p3));
+      min-height:100vh; display:flex; align-items:center; justify-content:center; padding:1.5rem;
+    }
+    h1,h2,h3,h4 { font-family:'Outfit',sans-serif; }
+
+    .signup-container {
+      width:100%; max-width:500px;
+      background:var(--white); border-radius:24px;
+      box-shadow:0 20px 60px rgba(0,0,0,.25); overflow:hidden;
+    }
+
+    .signup-header {
+      background:linear-gradient(135deg,var(--p1),var(--p2));
+      padding:1.75rem 2rem; text-align:center; color:#fff;
+    }
+    .signup-header .logo-icon { font-size:2.8rem; display:block; margin-bottom:.5rem; }
+    .signup-header h1 { font-size:1.55rem; font-weight:800; letter-spacing:-.2px; }
+    .signup-header p { font-size:.82rem; opacity:.8; margin-top:.3rem; }
+
+    .signup-body { padding:2rem; }
+
+    .fg { text-align:left; margin-bottom:1.1rem; }
+    .fg label { display:block; font-size:.76rem; font-weight:700; color:var(--muted); margin-bottom:.3rem; letter-spacing:.04em; text-transform:uppercase; }
+    .fg input {
+      width:100%; padding:.75rem 1rem; border:1.5px solid var(--border); border-radius:10px;
+      font-size:.92rem; outline:none; transition:border .2s,box-shadow .2s; font-family:inherit; background:var(--white);
+    }
+    .fg input:focus { border-color:var(--p2); box-shadow:0 0 0 3px rgba(40,53,147,.08); }
+    .fg input::placeholder { color:#bbc0d4; }
+
+    .pw-wrap { position:relative; }
+    .pw-wrap input { padding-right:2.8rem !important; }
+    .pw-eye { position:absolute; right:.7rem; top:50%; transform:translateY(-50%); background:none; border:none; cursor:pointer; color:var(--muted); font-size:1rem; padding:.15rem; line-height:1; }
+    .pw-eye:hover { color:var(--p2); }
+
+    .key-hint { font-size:.72rem; color:var(--muted); margin-top:.35rem; display:block; }
+
+    .btn {
+      display:flex; align-items:center; justify-content:center; gap:.5rem;
+      width:100%; padding:.82rem 1rem; border-radius:40px; border:none;
+      font-weight:700; font-size:.95rem; cursor:pointer; transition:all .2s;
+      font-family:'Outfit',sans-serif;
+    }
+    .btn-primary { background:var(--p2); color:#fff; }
+    .btn-primary:hover { background:var(--p1); transform:translateY(-2px); box-shadow:0 6px 18px rgba(26,35,126,.3); }
+    .btn:disabled { opacity:.6; transform:none; cursor:not-allowed; box-shadow:none; }
+
+    .msg-box {
+      border-radius:12px; padding:.8rem 1rem; margin-top:1.1rem;
+      font-size:.85rem; text-align:center; border-left:4px solid; display:none;
+    }
+    .msg-box.show { display:block; }
+    .msg-box.success { background:var(--p5); color:var(--p2); border-left-color:var(--p2); }
+    .msg-box.error   { background:var(--red-l); color:var(--red); border-left-color:var(--red); }
+
+    .divider { border:none; border-top:1px solid var(--border); margin:1.5rem 0; }
+
+    .footer-link { text-align:center; font-size:.8rem; color:var(--muted); }
+    .footer-link a { color:var(--p2); font-weight:700; text-decoration:none; }
+    .footer-link a:hover { text-decoration:underline; }
+
+    .requirements { background:var(--p5); border-radius:10px; padding:.8rem 1rem; margin-bottom:1.1rem; }
+    .requirements p { font-size:.76rem; color:var(--p2); font-weight:700; margin-bottom:.4rem; }
+    .requirements ul { list-style:none; display:flex; flex-direction:column; gap:.2rem; }
+    .requirements ul li { font-size:.74rem; color:var(--muted); display:flex; align-items:center; gap:.35rem; }
+    .req-icon { font-size:.7rem; }
+
+    .spinner { display:inline-block; width:18px; height:18px; border:2.5px solid rgba(255,255,255,.4); border-top-color:#fff; border-radius:50%; animation:spin .6s linear infinite; }
+    @keyframes spin { to{transform:rotate(360deg)} }
+  </style>
+</head>
+<body>
+
+<div class="signup-container">
+  <div class="signup-header">
+    <span class="logo-icon">🛡️</span>
+    <h1>Admin Registration</h1>
+    <p>Aleeman Primary School Portal</p>
+  </div>
+
+  <div class="signup-body">
+    <div class="requirements">
+      <p>📋 Before you begin:</p>
+      <ul>
+        <li><span class="req-icon">🔑</span> You need the Admin Registration Key from an existing administrator</li>
+        <li><span class="req-icon">📧</span> Use a valid email address you have access to</li>
+        <li><span class="req-icon">🔒</span> Password must be at least 6 characters</li>
+      </ul>
+    </div>
+
+    <form id="signup-form" autocomplete="off">
+      <div class="fg">
+        <label>Full Name</label>
+        <input type="text" id="admin-name" placeholder="e.g. Malam Yusuf Garba" required autocomplete="name" />
+      </div>
+
+      <div class="fg">
+        <label>Email Address</label>
+        <input type="email" id="admin-email" placeholder="admin@aleeman.edu.ng" required autocomplete="email" />
+      </div>
+
+      <div class="fg">
+        <label>Password</label>
+        <div class="pw-wrap">
+          <input type="password" id="admin-password" placeholder="At least 6 characters" required autocomplete="new-password" />
+          <button class="pw-eye" type="button" id="pw-eye-1" title="Show/hide">👁️</button>
+        </div>
+      </div>
+
+      <div class="fg">
+        <label>Confirm Password</label>
+        <div class="pw-wrap">
+          <input type="password" id="admin-confirm" placeholder="Re-enter password" required autocomplete="off" />
+          <button class="pw-eye" type="button" id="pw-eye-2" title="Show/hide">👁️</button>
+        </div>
+      </div>
+
+      <div class="fg">
+        <label>Admin Registration Key</label>
+        <div class="pw-wrap">
+          <input type="password" id="admin-key" placeholder="School admin security key" required />
+          <button class="pw-eye" type="button" id="pw-eye-3" title="Show/hide">👁️</button>
+        </div>
+        <span class="key-hint">★ Contact an existing admin or the school management to obtain this key.</span>
+      </div>
+
+      <div class="msg-box" id="msg-box"></div>
+
+      <button type="submit" class="btn btn-primary" id="signup-btn">
+        <span>✨</span> Create Admin Account
+      </button>
+    </form>
+
+    <hr class="divider" />
+
+    <div class="footer-link">
+      <a href="index.html" id="back-link">← Back to Admin Login</a>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword, signOut }
+  from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore, doc, setDoc, getDoc }
+  from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+/* ── PRIMARY SCHOOL Firebase config ── */
+const FB_CONFIG = {
+  apiKey:"AIzaSyAVD2x5XR55f_6GUBCNcfUcbT0LiTiw8VU",
+  authDomain:"aleeman-primary.firebaseapp.com",
+  projectId:"aleeman-primary",
+  storageBucket:"aleeman-primary.firebasestorage.app",
+  messagingSenderId:"120804301463",
+  appId:"1:120804301463:web:d1a84b22edd67bd36e67d2"
+};
+const app  = initializeApp(FB_CONFIG);
+const auth = getAuth(app);
+const db   = getFirestore(app);
+
+/* ── Admin registration key for Primary School ── */
+/* Change this key and share only with authorised personnel */
+const VALID_ADMIN_KEY = "ALEEMAN_PRIMARY_ADMIN_2025";
+
+const $ = id => document.getElementById(id);
+
+function showMsg(text, type='success') {
+  const el=$('msg-box'); el.textContent=text; el.className=`msg-box show ${type}`;
+  if (type!=='error') setTimeout(()=>el.classList.remove('show'),6000);
+}
+function clearMsg() { $('msg-box').classList.remove('show'); }
+
+function setLoading(loading) {
+  const btn=$('signup-btn');
+  if (loading) { btn.disabled=true; btn.innerHTML='<span class="spinner"></span> Creating account…'; }
+  else { btn.disabled=false; btn.innerHTML='<span>✨</span> Create Admin Account'; }
+}
+
+function isValidEmail(e){ return /^[^\s@]+@([^\s@.,]+\.)+[^\s@.,]{2,}$/.test(e); }
+
+/* Password eye toggles */
+function makeEye(eyeId, inputId) {
+  $(eyeId)?.addEventListener('click', function(){
+    const inp=$(inputId); const show=inp.type==='password';
+    inp.type=show?'text':'password'; this.textContent=show?'🙈':'👁️';
+  });
+}
+makeEye('pw-eye-1','admin-password');
+makeEye('pw-eye-2','admin-confirm');
+makeEye('pw-eye-3','admin-key');
+
+/* Real-time confirm match */
+const confirmInp=$('admin-confirm'), passInp=$('admin-password');
+function checkMatch(){ confirmInp.setCustomValidity(confirmInp.value&&passInp.value!==confirmInp.value?"Passwords don't match":''); }
+passInp.addEventListener('input',checkMatch); confirmInp.addEventListener('input',checkMatch);
+
+/* ── Signup form submit ── */
+$('signup-form').addEventListener('submit', async e => {
+  e.preventDefault(); clearMsg();
+  const name    = $('admin-name').value.trim();
+  const email   = $('admin-email').value.trim();
+  const pass    = $('admin-password').value;
+  const confirm = $('admin-confirm').value;
+  const key     = $('admin-key').value.trim();
+
+  /* Validation */
+  if (!name||!email||!pass||!confirm||!key) { showMsg('❌ All fields are required.','error'); return; }
+  if (name.length < 3) { showMsg('❌ Enter a valid full name (at least 3 characters).','error'); return; }
+  if (!isValidEmail(email)) { showMsg('❌ Enter a valid email address.','error'); return; }
+  if (pass.length < 6) { showMsg('❌ Password must be at least 6 characters.','error'); return; }
+  if (pass !== confirm) { showMsg('❌ Passwords do not match.','error'); return; }
+  if (key !== VALID_ADMIN_KEY) { showMsg('⛔ Invalid Admin Registration Key. Access denied.','error'); return; }
+
+  setLoading(true);
+  try {
+    /* 1. Create Firebase Auth user */
+    const cred = await createUserWithEmailAndPassword(auth, email, pass);
+    const uid  = cred.user.uid;
+
+    /* 2. Check teachers collection — admin must not be a teacher */
+    const teacherDoc = await getDoc(doc(db,'teachers',uid));
+    if (teacherDoc.exists()) {
+      await cred.user.delete();
+      setLoading(false);
+      showMsg('⚠️ This email is already registered as a teacher. Use a different email.','error');
+      return;
+    }
+
+    /* 3. Save admin record — no separate 'admins' collection needed;
+          admin is anyone in Firebase Auth who is NOT in the teachers collection.
+          We store a profile doc in 'admins' for name/display purposes. */
+    await setDoc(doc(db,'admins',uid),{
+      uid, name, email, role:'admin',
+      school:'Aleeman Primary School',
+      createdAt:new Date().toISOString(),
+      isActive:true,
+    });
+
+    /* 4. Sign out immediately so admin logs in fresh */
+    await signOut(auth);
+
+    showMsg(`✅ Admin account for "${name}" created! Redirecting to login…`,'success');
+    setTimeout(()=>{ window.location.href='./index.html'; },2200);
+  } catch(err) {
+    console.error('Signup error:',err);
+    const m={
+      'auth/email-already-in-use':'❌ This email is already registered.',
+      'auth/weak-password':'❌ Password is too weak. Use at least 6 characters.',
+      'auth/invalid-email':'❌ Invalid email format.',
+      'auth/network-request-failed':'❌ Network error. Check your connection.',
+    };
+    showMsg(m[err.code]||`❌ ${err.message||'Registration failed. Please try again.'}`, 'error');
+    setLoading(false);
+  }
+});
+
+$('back-link').addEventListener('click', e => { e.preventDefault(); window.location.href='./index.html'; });
+</script>
+</body>
+</html>

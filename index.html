@@ -10,7 +10,7 @@
 
 
 
-    <script>window.FLOATING_TEXT = 'Proudly 2025/2026';</script>
+    <script>window.FLOATING_TEXT = 'Proudly 2024/2025 Set';</script>
 <script src="floating.js"></script>
 
 
@@ -387,7 +387,7 @@
             <button class="btn btn-ghost btn-sm" id="export-students-btn">⬇ Export CSV</button>
           </div>
           <table>
-            <thead><tr><th>#</th><th>Name</th><th>Student No.</th><th>Class</th><th>Gender</th><th>PIN</th><th>Actions</th></tr></thead>
+            <thead><tr><th>#</th><th>Name</th><th>Email</th><th>Class</th><th>Gender</th><th>Student ID</th><th>Actions</th></tr></thead>
             <tbody id="students-tbody"><tr><td colspan="7"><span class="skel"></span></td></tr></tbody>
           </table>
           <div class="load-more-wrap" id="student-load-more-wrap">
@@ -587,30 +587,32 @@
     <div class="modal-body">
       <input type="hidden" id="as-edit-id" />
       <div class="fg"><label>Full Name</label><input id="as-name" type="text" placeholder="e.g. Fatima Ibrahim" /></div>
-      <div class="fg">
-        <label>Student Number</label>
-        <div style="display:flex;gap:.5rem">
-          <input id="as-number" type="text" placeholder="e.g. AP12345" style="flex:1" />
-          <button class="btn btn-ghost btn-sm" id="gen-num-btn" type="button">Generate</button>
-        </div>
-      </div>
+      <div class="fg"><label>Email Address</label><input id="as-email" type="email" placeholder="student@aleeman.edu.ng" autocomplete="off" /></div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem">
         <div class="fg"><label>Class</label><select id="as-class"><option value="">Select class</option></select></div>
         <div class="fg"><label>Gender</label><select id="as-gender"><option value="">Select gender</option><option>Male</option><option>Female</option></select></div>
       </div>
-      <div class="fg"><label>PIN / Password</label><input id="as-pin" type="text" placeholder="e.g. 1234 or surname" /></div>
+      <div id="pin-field-wrap">
+  <div class="fg"><label>Password <span style="color:var(--muted);font-weight:400">(min 6 characters)</span></label><input id="as-pin" type="password" placeholder="Minimum 6 characters" autocomplete="new-password" /></div>
+</div>
+<div id="pin-field-note" class="info-box" style="display:none">
+  🔒 To change a student's email address, The email address cannot be changed after creation.
+</div>
     </div>
     <div class="modal-ftr">
       <button class="btn btn-ghost btn-sm" data-close="mod-add-student">Cancel</button>
       <button class="btn btn-primary btn-sm" id="as-submit">Add Student</button>
     </div>
-  </div>
+  </div><div class="modal-body"><p>Delete <strong id="del-s-name"></strong>? Their result records will remain, but their login access will be removed.</p></div>
 </div>
 
 <div class="modal-ov" id="mod-del-student">
   <div class="modal">
     <div class="modal-hdr"><h3>Delete Student</h3><button class="modal-close" data-close="mod-del-student">✕</button></div>
-    <div class="modal-body"><p>Delete <strong id="del-s-name"></strong>? Their result records will remain, but their login access will be removed.</p></div>
+    <div class="modal-body">
+  <p style="margin-bottom:1rem">Delete <strong id="del-s-name"></strong>? Their result records will remain, but their login access will be removed.</p>
+  <div class="fg"><label>Enter student's password to confirm deletion</label><input id="ds-pass" type="password" placeholder="Student's current password" /></div>
+</div>
     <div class="modal-ftr">
       <button class="btn btn-ghost btn-sm" data-close="mod-del-student">Cancel</button>
       <button class="btn btn-danger btn-sm" id="ds-submit">Delete Student</button>
@@ -683,14 +685,35 @@ function showDash(){  $('login-page').style.display='none'; $('dashboard-page').
 function showLoginErr(msg){ const e=$('login-err'); e.textContent=msg; e.classList.add('show'); }
 function clearLoginErr(){ $('login-err').classList.remove('show'); }
 
-onAuthStateChanged(auth, async user=>{
-  if(signingOut)return;
-  if(user){
-    const teacherDoc=await getDoc(doc(db,'teachers',user.uid));
-    if(teacherDoc.exists()){ await signOut(auth); showLogin(); showLoginErr('Access denied. Use the Teacher Portal instead.'); return; }
-    $('sb-admin-name').textContent=user.displayName||user.email;
-    showDash(); loadStats(); loadTeachers(); loadSettings();
-  } else { showLogin(); }
+onAuthStateChanged(auth, async user => {
+  if (signingOut) return;
+  if (user) {
+    // Check if this person is a teacher OR a student — both are denied
+    const [teacherDoc, studentDoc] = await Promise.all([
+      getDoc(doc(db, 'teachers', user.uid)),
+      getDoc(doc(db, 'students', user.uid)),
+    ]);
+    if (teacherDoc.exists()) {
+      await signOut(auth);
+      showLogin();
+      showLoginErr('Access denied. Please use the Teacher Portal instead.');
+      return;
+    }
+    if (studentDoc.exists()) {
+      await signOut(auth);
+      showLogin();
+      showLoginErr('Access denied. Students cannot access the Admin Portal.');
+      return;
+    }
+    // Not a teacher or student — must be an admin
+    $('sb-admin-name').textContent = user.displayName || user.email;
+    showDash();
+    loadStats();
+    loadTeachers();
+    loadSettings();
+  } else {
+    showLogin();
+  }
 });
 
 async function doLogin(){
@@ -1033,67 +1056,126 @@ async function loadStudents(loadMore=false){
   }catch(err){console.error(err);$('students-tbody').innerHTML=`<tr class="empty-row"><td colspan="7">Error: ${esc(err.message)}</td></tr>`;}
   finally{studentLoading=false;if(btn)setBtn(btn,false);}
 }
-function renderStudents(list){
-  if(!list.length){$('students-tbody').innerHTML='<tr class="empty-row"><td colspan="7">No students found.</td></tr>';return;}
+function renderStudents(list) {
+  if (!list.length) { $('students-tbody').innerHTML='<tr class="empty-row"><td colspan="7">No students found.</td></tr>'; return; }
   $('students-tbody').innerHTML=list.map((s,i)=>`<tr>
     <td>${i+1}</td><td><strong>${esc(s.name||'—')}</strong></td>
-    <td><code>${esc(s.number||'—')}</code></td>
-    <td><span class="badge b-indigo">${esc(s.class||'—')}</span></td>
-    <td>${esc(s.gender||'—')}</td><td><code>${esc(s.password||'—')}</code></td>
+    <td>${esc(s.email||'—')}</td>
+    <td><span class="badge b-green">${esc(s.class||'—')}</span></td>
+    <td>${esc(s.gender||'—')}</td>
+    <td><code style="font-size:.68em;word-break:break-all">${esc(s.uid||s.id||'—')}</code></td>
     <td><div class="act-btns">
       <button class="btn btn-blue btn-sm" onclick="window._openEditStudent('${esc(s.id)}')">Edit</button>
-      <button class="btn btn-danger btn-sm" onclick="window._openDelStudent('${esc(s.id)}','${safe(s.name)}')">Delete</button>
+      <button class="btn btn-danger btn-sm" onclick="window._openDelStudent('${esc(s.id)}','${safe(s.name)}','${safe(s.email||'')}')">Delete</button>
     </div></td>
   </tr>`).join('');
 }
+
 $('cls-filter').addEventListener('change',()=>{studentLastDoc=null;studentFullCache=[];loadStudents();});
-$('student-search').addEventListener('input',e=>{const q=e.target.value.toLowerCase();renderStudents(studentFullCache.filter(s=>(s.name||'').toLowerCase().includes(q)||(s.number||'').toLowerCase().includes(q)));});
+$('student-search').addEventListener('input', e => {
+  const q=e.target.value.toLowerCase();
+  renderStudents(studentFullCache.filter(s=>(s.name||'').toLowerCase().includes(q)||(s.email||'').toLowerCase().includes(q)));
+});
 $('student-load-more-btn').addEventListener('click',()=>loadStudents(true));
 
-$('gen-num-btn').addEventListener('click',()=>{let num;do{num='AP'+String(Math.floor(10000+Math.random()*90000));}while(usedNums.has(num));$('as-number').value=num;$('as-number').readOnly=true;});
 
-$('add-student-btn').addEventListener('click',()=>{
-  isEditingStudent=false;$('as-modal-title').textContent='Add New Student';$('as-submit').textContent='Add Student';
-  $('as-edit-id').value='';['as-name','as-number','as-pin'].forEach(id=>$(id).value='');
-  $('as-class').value='';$('as-gender').value='';$('as-number').readOnly=false;
+
+$('add-student-btn').addEventListener('click', () => {
+  isEditingStudent=false;
+  $('as-modal-title').textContent='Add New Student';
+  $('as-submit').textContent='Add Student';
+  $('as-edit-id').value='';
+  ['as-name','as-email','as-pin'].forEach(id=>$(id).value='');
+  $('as-class').value=''; $('as-gender').value='';
+  $('as-email').readOnly=false;
+  // Show password field for new students
+  document.getElementById('pin-field-wrap').style.display='';
+  document.getElementById('pin-field-note').style.display='none';
   openModal('mod-add-student');
 });
+
+
 window._openEditStudent=id=>{
-  const s=studentFullCache.find(x=>x.id===id);if(!s)return;
-  isEditingStudent=true;$('as-modal-title').textContent='Edit Student';$('as-submit').textContent='Save Changes';
-  $('as-edit-id').value=id;$('as-name').value=s.name||'';$('as-number').value=s.number||'';
-  $('as-class').value=s.class||'';$('as-gender').value=s.gender||'';$('as-pin').value=s.password||'';
-  $('as-number').readOnly=true;openModal('mod-add-student');
+  const s=studentFullCache.find(x=>x.id===id); if(!s) return;
+  isEditingStudent=true;
+  $('as-modal-title').textContent='Edit Student';
+  $('as-submit').textContent='Save Changes';
+  $('as-edit-id').value=id;
+  $('as-name').value=s.name||'';
+  $('as-email').value=s.email||'';
+  $('as-email').readOnly=true; // Email cannot change — it's their auth identity
+  $('as-class').value=s.class||'';
+  $('as-gender').value=s.gender||'';
+  $('as-pin').value='';
+  // Hide password field when editing — password changes must go through Firebase Console
+  document.getElementById('pin-field-wrap').style.display='none';
+  document.getElementById('pin-field-note').style.display='block';
+  openModal('mod-add-student');
 };
-$('as-submit').addEventListener('click',async()=>{
-  const btn=$('as-submit'),name=$('as-name').value.trim(),number=$('as-number').value.trim(),cls=$('as-class').value,gender=$('as-gender').value,pin=$('as-pin').value.trim();
-  if(!name||!number||!cls||!gender||!pin){toast('Fill in all fields.','error');return;}
+
+
+$('as-submit').addEventListener('click', async () => {
+  const btn=$('as-submit'), name=$('as-name').value.trim(), email=$('as-email').value.trim(),
+    cls=$('as-class').value, gender=$('as-gender').value, pass=$('as-pin').value;
+  if (!name||!email||!cls||!gender) { toast('Fill in all required fields.','error'); return; }
+  if (!isEditingStudent && !pass) { toast('Password is required.','error'); return; }
+  if (!isEditingStudent && pass.length<6) { toast('Password must be at least 6 characters.','error'); return; }
   setBtn(btn,true);
-  try{
-    if(isEditingStudent){
-      await updateDoc(doc(db,'students',$('as-edit-id').value),{name,class:cls,gender,password:pin,updatedAt:serverTimestamp()});
+  try {
+    if (isEditingStudent) {
+      // Only update non-auth fields when editing
+      await updateDoc(doc(db,'students',$('as-edit-id').value),{name,class:cls,gender,updatedAt:serverTimestamp()});
       toast(`Student "${name}" updated!`);
-    }else{
-      const existing=await getDocs(query(collection(db,'students'),where('number','==',number)));
-      if(!existing.empty){toast('Student number already exists.','error');setBtn(btn,false);return;}
-      await addDoc(collection(db,'students'),{name,number,class:cls,gender,password:pin,createdAt:serverTimestamp()});
-      usedNums.add(number);toast(`Student "${name}" added!`);
+    } else {
+      // Create Firebase Auth account for student
+      const secAuth=createSecondaryAuth();
+      const cred=await createUserWithEmailAndPassword(secAuth,email,pass);
+      await signOut(secAuth);
+      const uid=cred.user.uid;
+      // Store in Firestore using UID as document ID; number=uid for teacher portal compatibility
+      await setDoc(doc(db,'students',uid),{uid,name,email,class:cls,gender,number:uid,createdAt:serverTimestamp()});
+      usedNums.add(uid);
+      toast(`Student "${name}" added!`);
     }
-    closeModal('mod-add-student');studentLastDoc=null;studentFullCache=[];loadStudents();loadStats();
-  }catch(err){toast('Failed to save student.','error');}finally{setBtn(btn,false);}
+    closeModal('mod-add-student');
+    studentLastDoc=null; studentFullCache=[];
+    loadStudents(); loadStats();
+  } catch(err) {
+    const m={
+      'auth/email-already-in-use':'Email already registered to another account.',
+      'auth/weak-password':'Password is too weak (min 6 characters).',
+      'auth/invalid-email':'Invalid email address.'
+    };
+    toast(m[err.code]||'Failed to save student: '+err.message,'error');
+  }
+  finally { setBtn(btn,false); }
 });
-window._openDelStudent=(id,name)=>{pendingDelStudent={id,name};$('del-s-name').textContent=name;openModal('mod-del-student');};
-$('ds-submit').addEventListener('click',async()=>{
-  if(!pendingDelStudent)return;
-  const btn=$('ds-submit');setBtn(btn,true);
-  try{await deleteDoc(doc(db,'students',pendingDelStudent.id));toast('Student deleted.');closeModal('mod-del-student');pendingDelStudent=null;studentLastDoc=null;studentFullCache=[];loadStudents();loadStats();}
-  catch(err){toast('Failed to delete.','error');}finally{setBtn(btn,false);}
+
+window._openDelStudent=(id,name,email)=>{ pendingDelStudent={id,name,email}; $('del-s-name').textContent=name; $('ds-pass').value=''; openModal('mod-del-student'); };
+$('ds-submit').addEventListener('click', async () => {
+  if (!pendingDelStudent) return;
+  const btn=$('ds-submit'), pass=$('ds-pass').value;
+  if (!pass) { toast('Enter student password to confirm.','error'); return; }
+  setBtn(btn,true);
+  try {
+    const secAuth=createSecondaryAuth();
+    const cred=await signInWithEmailAndPassword(secAuth,pendingDelStudent.email,pass);
+    await deleteUser(cred.user);
+    await deleteDoc(doc(db,'students',pendingDelStudent.id));
+    toast('Student deleted.'); closeModal('mod-del-student'); pendingDelStudent=null;
+    studentLastDoc=null; studentFullCache=[];
+    loadStudents(); loadStats();
+  } catch(err) {
+    const m={'auth/wrong-password':'Incorrect password.','auth/invalid-credential':'Incorrect password.'};
+    toast(m[err.code]||'Failed to delete student.','error');
+  } finally { setBtn(btn,false); }
 });
-$('export-students-btn').addEventListener('click',()=>{
-  if(!studentFullCache.length){toast('No students to export.','error');return;}
-  const rows=[['#','Name','Number','Class','Gender','PIN']];
-  studentFullCache.forEach((s,i)=>rows.push([i+1,s.name,s.number,s.class,s.gender,s.password]));
-  downloadCSV(rows,'students_export.csv');toast('Exported!');
+
+$('export-students-btn').addEventListener('click', () => {
+  if (!studentFullCache.length) { toast('No students to export.','error'); return; }
+  const rows=[['#','Name','Email','Class','Gender','UID']];
+  studentFullCache.forEach((s,i)=>rows.push([i+1,s.name,s.email||'',s.class,s.gender,s.uid||s.id||'']));
+  downloadCSV(rows,'students_export.csv'); toast('Exported!');
 });
 
 /* ── RESULTS ── */

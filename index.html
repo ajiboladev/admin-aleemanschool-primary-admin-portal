@@ -272,6 +272,23 @@
     .pw-eye:hover { color:var(--p2); }
     code { background:#eef0fb; padding:.1rem .4rem; border-radius:4px; font-size:.82em; }
 
+   /* ── Payment toggle switch ── */
+.pay-switch { display:inline-flex; align-items:center; gap:.45rem; cursor:pointer; }
+.pay-switch input { display:none; }
+.pay-switch .track {
+  width:38px; height:20px; border-radius:20px; background:var(--red);
+  position:relative; transition:background .2s; flex-shrink:0;
+}
+.pay-switch .track::after {
+  content:''; position:absolute; top:2px; left:2px;
+  width:16px; height:16px; border-radius:50%; background:#fff;
+  transition:transform .2s; box-shadow:0 1px 3px rgba(0,0,0,.25);
+}
+.pay-switch input:checked + .track { background:var(--green); }
+.pay-switch input:checked + .track::after { transform:translateX(18px); }
+.pay-switch .pay-label { font-size:.73rem; font-weight:700; min-width:40px; }
+.pay-switch:has(input:checked) .pay-label { color:var(--green); }
+.pay-switch:not(:has(input:checked)) .pay-label { color:var(--red); }
     @media (max-width:720px) {
       .sidebar { transform:translateX(-100%); }
       .sidebar.open { transform:none; }
@@ -379,6 +396,8 @@
               <option value="">All Classes</option>
             </select>
             <button class="btn btn-primary btn-sm" id="add-student-btn">+ Add Student</button>
+            <button class="btn btn-amber btn-sm" id="promote-btn">⬆ Promote Students</button>
+            <button class="btn btn-ghost btn-sm" id="reset-payment-btn">💳 Reset Payment</button>
           </div>
         </div>
         <div class="tbl-card">
@@ -387,7 +406,7 @@
             <button class="btn btn-ghost btn-sm" id="export-students-btn">⬇ Export CSV</button>
           </div>
           <table>
-            <thead><tr><th>#</th><th>Name</th><th>Email</th><th>Class</th><th>Gender</th><th>Student ID</th><th>Actions</th></tr></thead>
+            <thead><tr><th>#</th><th>Name</th><th>Email</th><th>Class</th><th>Gender</th><th>Student ID</th><th>Paid</th><th>Actions</th></tr></thead>
             <tbody id="students-tbody"><tr><td colspan="7"><span class="skel"></span></td></tr></tbody>
           </table>
           <div class="load-more-wrap" id="student-load-more-wrap">
@@ -603,7 +622,7 @@
       <button class="btn btn-ghost btn-sm" data-close="mod-add-student">Cancel</button>
       <button class="btn btn-primary btn-sm" id="as-submit">Add Student</button>
     </div>
-  </div><div class="modal-body"><p>Delete <strong id="del-s-name"></strong>? Their result records will remain, but their login access will be removed.</p></div>
+</div>
 </div>
 
 <div class="modal-ov" id="mod-del-student">
@@ -620,6 +639,84 @@
   </div>
 </div>
 
+
+<!-- PROMOTE STUDENTS MODAL -->
+<div class="modal-ov" id="mod-promote">
+  <div class="modal wide">
+    <div class="modal-hdr">
+      <h3>⬆ Promote Students</h3>
+      <button class="modal-close" data-close="mod-promote">✕</button>
+    </div>
+    <div class="modal-body">
+
+      <!-- Shown when active term is NOT Third Term -->
+      <div class="warn-box" id="promo-gate-msg" style="display:none"></div>
+
+      <!-- Main form — only visible in Third Term -->
+      <div id="promo-form">
+        <div class="info-box">
+          ℹ️ Only students with an overall average ≥ 50% across all submitted
+          terms for the selected session will be promoted. Students already
+          promoted (no longer in this class) are automatically excluded.
+          Re-running promotion is safe — only students still in the class are
+          re-evaluated. Final-year classes cannot be promoted.
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+          <div class="fg" style="margin-bottom:.5rem">
+            <label>Promote From Class</label>
+            <select id="promo-from"><option value="">Choose class…</option></select>
+          </div>
+          <div class="fg" style="margin-bottom:.5rem">
+            <label>Academic Session</label>
+            <input id="promo-session" type="text" placeholder="e.g. 2024/2025" />
+          </div>
+        </div>
+
+        <div id="promo-preview-wrap"
+             style="display:none;background:var(--p5);border-radius:10px;
+                    padding:1rem;font-size:.84rem;margin-top:.5rem;
+                    max-height:340px;overflow-y:auto;line-height:1.6">
+          <div id="promo-preview"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-ftr">
+      <button class="btn btn-ghost btn-sm" data-close="mod-promote">Cancel</button>
+      <button class="btn btn-ghost btn-sm" id="promo-preview-btn">🔍 Preview</button>
+      <button class="btn btn-amber btn-sm"  id="promo-submit" disabled>⬆ Promote</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- RESET PAYMENT MODAL -->
+<div class="modal-ov" id="mod-reset-payment">
+  <div class="modal">
+    <div class="modal-hdr">
+      <h3>💳 Reset Payment Status</h3>
+      <button class="modal-close" data-close="mod-reset-payment">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="warn-box">
+        ⚠️ This will mark <strong>all students in the selected class as Unpaid</strong>.
+        Students who have already paid but not yet checked their result will also lose access
+        until an admin manually marks them as paid again. Only reset at the start of a new term.
+      </div>
+      <div class="fg">
+        <label>Select Class to Reset</label>
+        <select id="rp-class-sel"><option value="">Choose class…</option></select>
+      </div>
+      <div id="rp-preview" style="display:none;background:var(--amber-l);border-radius:10px;padding:.85rem 1rem;font-size:.84rem;margin-top:.5rem;"></div>
+    </div>
+    <div class="modal-ftr">
+      <button class="btn btn-ghost btn-sm" data-close="mod-reset-payment">Cancel</button>
+      <button class="btn btn-ghost btn-sm" id="rp-preview-btn">🔍 Preview</button>
+      <button class="btn btn-danger btn-sm" id="rp-submit" disabled>🔄 Reset All to Unpaid</button>
+    </div>
+  </div>
+</div>
+
 <div id="toast"></div>
 
 <script type="module">
@@ -629,7 +726,7 @@ import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut,
   from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import { getFirestore, collection, doc, addDoc, setDoc, getDoc, getDocs,
          deleteDoc, updateDoc, query, where, orderBy, serverTimestamp,
-         limit, startAfter, writeBatch, getCountFromServer }
+         limit, startAfter, writeBatch, getCountFromServer, arrayUnion  }
   from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const FB_CONFIG = {
@@ -1022,8 +1119,8 @@ $('dt-submit').addEventListener('click',async()=>{
   try{
     const secAuth=createSecondaryAuth();
     const cred=await signInWithEmailAndPassword(secAuth,pendingDelTeacher.email,pass);
-    await deleteUser(cred.user);
     await deleteDoc(doc(db,'teachers',pendingDelTeacher.id));
+    await deleteUser(cred.user);
     toast('Teacher deleted.');closeModal('mod-del-teacher');pendingDelTeacher=null;teacherLastDoc=null;teacherFullCache=[];loadTeachers();loadStats();
   }catch(err){const m={'auth/wrong-password':'Incorrect password.','auth/invalid-credential':'Incorrect password.'};toast(m[err.code]||'Failed to delete.','error');}finally{setBtn(btn,false);}
 });
@@ -1056,20 +1153,35 @@ async function loadStudents(loadMore=false){
   }catch(err){console.error(err);$('students-tbody').innerHTML=`<tr class="empty-row"><td colspan="7">Error: ${esc(err.message)}</td></tr>`;}
   finally{studentLoading=false;if(btn)setBtn(btn,false);}
 }
+
+
 function renderStudents(list) {
-  if (!list.length) { $('students-tbody').innerHTML='<tr class="empty-row"><td colspan="7">No students found.</td></tr>'; return; }
-  $('students-tbody').innerHTML=list.map((s,i)=>`<tr>
-    <td>${i+1}</td><td><strong>${esc(s.name||'—')}</strong></td>
-    <td>${esc(s.email||'—')}</td>
-    <td><span class="badge b-green">${esc(s.class||'—')}</span></td>
-    <td>${esc(s.gender||'—')}</td>
-    <td><code style="font-size:.68em;word-break:break-all">${esc(s.uid||s.id||'—')}</code></td>
-    <td><div class="act-btns">
-      <button class="btn btn-blue btn-sm" onclick="window._openEditStudent('${esc(s.id)}')">Edit</button>
-      <button class="btn btn-danger btn-sm" onclick="window._openDelStudent('${esc(s.id)}','${safe(s.name)}','${safe(s.email||'')}')">Delete</button>
-    </div></td>
-  </tr>`).join('');
+  if (!list.length) { $('students-tbody').innerHTML='<tr class="empty-row"><td colspan="8">No students found.</td></tr>'; return; }
+  $('students-tbody').innerHTML=list.map((s,i)=>{
+    const paid = !!s.hasPaid;
+    return `<tr>
+      <td>${i+1}</td><td><strong>${esc(s.name||'—')}</strong></td>
+      <td>${esc(s.email||'—')}</td>
+      <td><span class="badge b-green">${esc(s.class||'—')}</span></td>
+      <td>${esc(s.gender||'—')}</td>
+      <td><code style="font-size:.68em;word-break:break-all">${esc(s.uid||s.id||'—')}</code></td>
+      <td>
+        <label class="pay-switch" title="${paid?'Click to mark Unpaid':'Click to mark Paid'}">
+          <input type="checkbox" ${paid?'checked':''} data-id="${esc(s.id)}"
+            onchange="window._togglePayment('${esc(s.id)}',${paid})" />
+          <span class="track"></span>
+          <span class="pay-label">${paid?'Paid':'Unpaid'}</span>
+        </label>
+      </td>
+      <td><div class="act-btns">
+        <button class="btn btn-blue btn-sm" onclick="window._openEditStudent('${esc(s.id)}')">Edit</button>
+        <button class="btn btn-danger btn-sm" onclick="window._openDelStudent('${esc(s.id)}','${safe(s.name)}','${safe(s.email||'')}')">Delete</button>
+      </div></td>
+    </tr>`;
+  }).join('');
 }
+
+
 
 $('cls-filter').addEventListener('change',()=>{studentLastDoc=null;studentFullCache=[];loadStudents();});
 $('student-search').addEventListener('input', e => {
@@ -1160,8 +1272,8 @@ $('ds-submit').addEventListener('click', async () => {
   try {
     const secAuth=createSecondaryAuth();
     const cred=await signInWithEmailAndPassword(secAuth,pendingDelStudent.email,pass);
-    await deleteUser(cred.user);
     await deleteDoc(doc(db,'students',pendingDelStudent.id));
+     await deleteUser(cred.user);
     toast('Student deleted.'); closeModal('mod-del-student'); pendingDelStudent=null;
     studentLastDoc=null; studentFullCache=[];
     loadStudents(); loadStats();
@@ -1213,6 +1325,398 @@ function downloadCSV(rows,filename){
   const csv=rows.map(r=>r.map(v=>`"${String(v??'').replace(/"/g,'""')}"`).join(',')).join('\n');
   const a=document.createElement('a');a.href='data:text/csv;charset=utf-8,\uFEFF'+encodeURIComponent(csv);a.download=filename;a.click();
 }
+
+
+
+
+/* ═══════════════════════════════════════════════════════
+   STUDENT PROMOTION
+   ═══════════════════════════════════════════════════════ */
+
+// Secondary order (used in admin-secondary).
+// Primary admin already has getAllClasses() from classesData.
+const _SEC_CLASS_ORDER = ['JSS1','JSS2','JSS3','SS1','SS2','SS3'];
+
+function _getNextClass(cls) {
+  // Check secondary fixed list first
+  const si = _SEC_CLASS_ORDER.indexOf(cls);
+  if (si !== -1) {
+    return si >= _SEC_CLASS_ORDER.length - 1 ? null : _SEC_CLASS_ORDER[si + 1];
+  }
+  // Check primary dynamic list (getAllClasses exists in primary admin)
+  if (typeof getAllClasses === 'function') {
+    const all = getAllClasses();
+    const pi  = all.indexOf(cls);
+    if (pi !== -1) return pi >= all.length - 1 ? null : all[pi + 1];
+  }
+  return null;
+}
+
+let _promoPayload = null; // set by preview, consumed by promote
+
+/* ── Open modal ── */
+document.getElementById('promote-btn')?.addEventListener('click', async () => {
+  _promoPayload = null;
+  $('promo-submit').disabled    = true;
+  $('promo-preview-wrap').style.display = 'none';
+
+  // Fetch active term — gate if not Third Term
+  let activeTerm = '', activeSession = '';
+  try {
+    const snap = await getDoc(doc(db, 'settings', 'session'));
+    if (snap.exists()) {
+      activeTerm    = snap.data().activeTerm    || '';
+      activeSession = snap.data().activeSession || '';
+    }
+  } catch(e) { console.error(e); }
+
+  if (activeTerm !== 'Third Term') {
+    $('promo-gate-msg').textContent =
+      `⛔ Promotion is only allowed during Third Term. ` +
+      `Current active term: "${activeTerm || 'not set'}".`;
+    $('promo-gate-msg').style.display = 'block';
+    $('promo-form').style.display     = 'none';
+  } else {
+    $('promo-gate-msg').style.display = 'none';
+    $('promo-form').style.display     = 'block';
+  }
+
+  // Populate class dropdown
+  const classes = typeof getAllClasses === 'function'
+    ? getAllClasses()
+    : _SEC_CLASS_ORDER;
+  $('promo-from').innerHTML =
+    '<option value="">Choose class…</option>' +
+    classes.map(c => `<option>${esc(c)}</option>`).join('');
+
+  if (activeSession) $('promo-session').value = activeSession;
+  openModal('mod-promote');
+});
+
+/* ── Preview ── */
+$('promo-preview-btn').addEventListener('click', async () => {
+  const fromClass = $('promo-from').value.trim();
+  const session   = $('promo-session').value.trim();
+
+  if (!fromClass || !session) {
+    toast('Select a class and enter the session.', 'error'); return;
+  }
+  if (!/^\d{4}\/\d{4}$/.test(session)) {
+    toast('Session must be in format YYYY/YYYY (e.g. 2024/2025)', 'error'); return;
+  }
+  // Validate YYYY/YYYY year continuity
+  const [y1, y2] = session.split('/').map(Number);
+  if (y2 !== y1 + 1) {
+    toast('Session end year must be exactly one year after start.', 'error'); return;
+  }
+
+  const nextClass = _getNextClass(fromClass);
+  const previewWrap = $('promo-preview-wrap');
+  const previewEl   = $('promo-preview');
+
+  previewWrap.style.display = 'none';
+  _promoPayload = null;
+  $('promo-submit').disabled = true;
+
+  // Terminal class — no promotion
+  if (!nextClass) {
+    previewEl.innerHTML =
+      `<span style="color:var(--amber)">⚠️ <strong>${esc(fromClass)}</strong> is ` +
+      `the final class. Students graduate here — no promotion applies.</span>`;
+    previewWrap.style.display = 'block';
+    return;
+  }
+
+  const btn = $('promo-preview-btn');
+  setBtn(btn, true);
+
+  try {
+    /* 1 ── Students currently in fromClass (these are the only candidates) */
+    const studSnap = await getDocs(
+      query(collection(db, 'students'), where('class', '==', fromClass))
+    );
+
+    if (studSnap.empty) {
+      previewEl.innerHTML =
+        `<em>No students currently in <strong>${esc(fromClass)}</strong>.</em>`;
+      previewWrap.style.display = 'block';
+      setBtn(btn, false);
+      return;
+    }
+
+    // Map studentNumber → { firestoreDocId, name }
+    const candidates = {};
+    studSnap.docs.forEach(d => {
+      const data = d.data();
+      const key  = data.number || d.id; // number === uid in current schema
+      candidates[key] = { id: d.id, name: data.name || key };
+    });
+
+    /* 2 ── All result docs for this class + session (up to 3 terms) */
+    const resSnap = await getDocs(
+      query(
+        collection(db, 'results'),
+        where('class',   '==', fromClass),
+        where('session', '==', session)
+      )
+    );
+
+    /* 3 ── Collect per-student term averages */
+    // Key: studentNumber → array of term averages
+    const termAvgs = {};
+    resSnap.docs.forEach(d => {
+      const data = d.data();
+      const num  = data.studentNumber;
+      // Only process students who are still in this class
+      if (!num || !(num in candidates)) return;
+      if (data.average == null)          return;
+      if (!termAvgs[num]) termAvgs[num] = [];
+      termAvgs[num].push(Number(data.average));
+    });
+
+    /* 4 ── Classify each candidate */
+    const toPromote = [];   // avg >= 50
+    const toStay    = [];   // avg <  50
+    const noResults = [];   // no result docs found for this session
+
+    Object.entries(candidates).forEach(([num, student]) => {
+      const avgs = termAvgs[num];
+      if (!avgs || !avgs.length) {
+        noResults.push(student.name);
+        return;
+      }
+      // Average of available terms (1, 2 or 3 — divide by actual count)
+      const overall = avgs.reduce((a, b) => a + b, 0) / avgs.length;
+      const bucket  = overall >= 50 ? toPromote : toStay;
+      bucket.push({
+        id:    student.id,
+        name:  student.name,
+        avg:   overall.toFixed(1),
+        terms: avgs.length
+      });
+    });
+
+    // Sort each list alphabetically for easy reading
+    const byName = (a, b) => a.name.localeCompare(b.name);
+    toPromote.sort(byName);
+    toStay.sort(byName);
+
+    /* 5 ── Render preview */
+    const termLabel = n => `${n} term${n !== 1 ? 's' : ''}`;
+    let html =
+      `<strong style="font-size:.9rem">` +
+      `${esc(fromClass)} → ${esc(nextClass)} &nbsp;·&nbsp; ${esc(session)}</strong><br><br>`;
+
+    html += `✅ <strong>${toPromote.length}</strong> will be promoted (avg ≥ 50%)`;
+    if (toPromote.length) {
+      html += `<ul style="margin:.35rem 0 .85rem 1.1rem">` +
+        toPromote.map(s =>
+          `<li>${esc(s.name)} — <strong>${s.avg}%</strong> ` +
+          `<span style="opacity:.55">(${termLabel(s.terms)})</span></li>`
+        ).join('') + `</ul>`;
+    } else { html += `<br><br>`; }
+
+    html += `❌ <strong>${toStay.length}</strong> will stay (avg < 50%)`;
+    if (toStay.length) {
+      html += `<ul style="margin:.35rem 0 .85rem 1.1rem">` +
+        toStay.map(s =>
+          `<li>${esc(s.name)} — <strong>${s.avg}%</strong> ` +
+          `<span style="opacity:.55">(${termLabel(s.terms)})</span></li>`
+        ).join('') + `</ul>`;
+    } else { html += `<br><br>`; }
+
+    if (noResults.length) {
+      html +=
+        `⚪ <strong>${noResults.length}</strong> skipped — no results for this session: ` +
+        noResults.map(esc).join(', ');
+    }
+
+    previewEl.innerHTML       = html;
+    previewWrap.style.display = 'block';
+
+    if (toPromote.length > 0) {
+      _promoPayload = { fromClass, nextClass, session, toPromote };
+      $('promo-submit').disabled = false;
+    }
+
+  } catch(err) {
+    console.error('Promotion preview error:', err);
+    toast('Preview failed: ' + err.message, 'error');
+  } finally {
+    setBtn(btn, false);
+  }
+});
+
+/* ── Execute promotion ── */
+$('promo-submit').addEventListener('click', async () => {
+  if (!_promoPayload) return;
+  const { fromClass, nextClass, session, toPromote } = _promoPayload;
+
+  // Re-verify Third Term at submit time (admin could have changed it)
+  try {
+    const snap = await getDoc(doc(db, 'settings', 'session'));
+    const activeTerm = snap.exists() ? (snap.data().activeTerm || '') : '';
+    if (activeTerm !== 'Third Term') {
+      toast('Promotion blocked: active term is no longer Third Term.', 'error');
+      return;
+    }
+  } catch(e) {
+    toast('Could not verify active term. Please try again.', 'error');
+    return;
+  }
+
+  if (!confirm(
+    `Promote ${toPromote.length} student(s)\n` +
+    `From: ${fromClass}  →  To: ${nextClass}\n` +
+    `Session: ${session}\n\n` +
+    `Students who fail are untouched. This cannot be undone.`
+  )) return;
+
+  const btn = $('promo-submit');
+  setBtn(btn, true);
+
+  // Use a single consistent timestamp for all promotion history entries
+  const promotedAt = new Date().toISOString();
+  // Chunk to stay safely under Firestore's 500-op batch limit
+  const CHUNK_SIZE = 450;
+
+  try {
+    for (let i = 0; i < toPromote.length; i += CHUNK_SIZE) {
+      const chunk = toPromote.slice(i, i + CHUNK_SIZE);
+      const batch = writeBatch(db);
+      chunk.forEach(s => {
+        batch.update(doc(db, 'students', s.id), {
+          class:     nextClass,
+          updatedAt: serverTimestamp(),
+          // arrayUnion ensures no duplicate entries even if promote runs twice
+          promotionHistory: arrayUnion({
+            from: fromClass, to: nextClass,
+            session, promotedAt
+          })
+        });
+      });
+      await batch.commit();
+    }
+
+    
+    toast(`✅ ${toPromote.length} student(s) promoted: ${fromClass} → ${nextClass}`);
+    closeModal('mod-promote');
+    _promoPayload = null;
+    studentLastDoc   = null;
+    studentFullCache = [];
+    loadStudents();
+    loadStats();
+
+  } catch(err) {
+    console.error('Promotion batch error:', err);
+    toast('Promotion failed: ' + err.message, 'error');
+  } finally {
+    setBtn(btn, false);
+  }
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ── Payment toggle (single student) ── */
+window._togglePayment = async (id, currentPaid) => {
+  const newStatus = !currentPaid;
+  // find the toggle by data attribute to avoid querySelector selector issues
+  const toggleEl = document.querySelector(`.pay-toggle[data-id="${id}"]`);
+  if (toggleEl) toggleEl.disabled = true;
+  try {
+    await updateDoc(doc(db, 'students', id), {
+      hasPaid: newStatus,
+      paymentUpdatedAt: serverTimestamp()
+    });
+    const s = studentFullCache.find(x => x.id === id);
+    if (s) s.hasPaid = newStatus;
+    renderStudents(studentFullCache);
+    toast(newStatus ? '✅ Marked as Paid' : '❌ Marked as Unpaid', newStatus ? 'success' : 'info');
+  } catch(err) {
+    toast('Failed to update payment status.', 'error');
+    console.error(err);
+    const toggleEl2 = document.querySelector(`.pay-toggle[data-id="${id}"]`);
+    if (toggleEl2) toggleEl2.disabled = false;
+  }
+};
+
+/* ── Reset Payment Modal ── */
+let _resetPaymentClass = '';
+
+$('reset-payment-btn').addEventListener('click', () => {
+  _resetPaymentClass = '';
+  $('rp-submit').disabled = true;
+  $('rp-preview').style.display = 'none';
+  const all = typeof getAllClasses === 'function'
+    ? getAllClasses()
+    : Array.from($('cls-filter').options).map(o => o.value).filter(Boolean);
+  $('rp-class-sel').innerHTML = '<option value="">Choose class…</option>' +
+    all.map(c => `<option>${esc(c)}</option>`).join('');
+  openModal('mod-reset-payment');
+});
+
+$('rp-preview-btn').addEventListener('click', async () => {
+  const cls = $('rp-class-sel').value;
+  if (!cls) { toast('Please select a class.', 'error'); return; }
+  const btn = $('rp-preview-btn'); setBtn(btn, true);
+  try {
+    const snap = await getDocs(query(collection(db, 'students'), where('class', '==', cls)));
+    const total = snap.size;
+    const alreadyPaid = snap.docs.filter(d => d.data().hasPaid).length;
+    _resetPaymentClass = cls;
+    $('rp-preview').innerHTML =
+      `Class <strong>${esc(cls)}</strong> has <strong>${total}</strong> student(s). ` +
+      `<strong>${alreadyPaid}</strong> currently marked as Paid will be reset to Unpaid.` +
+      (alreadyPaid > 0
+        ? `<br><span style="color:var(--red)">Those students will lose result access until manually re-marked.</span>`
+        : '');
+    $('rp-preview').style.display = 'block';
+    $('rp-submit').disabled = total === 0;
+  } catch(err) {
+    toast('Preview failed: ' + err.message, 'error');
+  } finally { setBtn(btn, false); }
+});
+
+$('rp-submit').addEventListener('click', async () => {
+  if (!_resetPaymentClass) return;
+  if (!confirm(`Reset ALL students in ${_resetPaymentClass} to Unpaid?\n\nStudents who have paid but not yet viewed their result will lose access until re-marked.`)) return;
+  const btn = $('rp-submit'); setBtn(btn, true);
+  try {
+    const snap = await getDocs(query(collection(db, 'students'), where('class', '==', _resetPaymentClass)));
+    const docs = snap.docs;
+    const CHUNK = 450;
+    for (let i = 0; i < docs.length; i += CHUNK) {
+      const batch = writeBatch(db);
+      docs.slice(i, i + CHUNK).forEach(d => {
+        batch.update(doc(db, 'students', d.id), {
+          hasPaid: false,
+          paymentUpdatedAt: serverTimestamp()
+        });
+      });
+      await batch.commit();
+    }
+    studentFullCache.forEach(s => { if (s.class === _resetPaymentClass) s.hasPaid = false; });
+    renderStudents(studentFullCache);
+    toast(`✅ Payment reset for all students in ${_resetPaymentClass}.`);
+    closeModal('mod-reset-payment');
+    _resetPaymentClass = '';
+  } catch(err) {
+    toast('Reset failed: ' + err.message, 'error');
+    console.error(err);
+  } finally { setBtn(btn, false); }
+});
 </script>
 </body>
 </html>

@@ -6,7 +6,7 @@
   <title>Admin — Aleeman Primary School Portal</title>
   <link rel="icon" type="image/x-icon" href="aleeman-logo.png" />
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 
 
@@ -327,19 +327,19 @@
   <div class="layout">
     <aside class="sidebar" id="sidebar">
       <div class="sb-header">
-        <div class="sb-school">🏫 Aleeman Primary</div>
+        <div class="sb-school"><i class="fa-solid fa-school"></i> Aleeman Primary</div>
         <div class="sb-role">Admin Dashboard</div>
         <div class="sb-admin-name" id="sb-admin-name">Admin</div>
       </div>
       <nav class="nav-links">
-        <button class="nav-link active" data-panel="overview"><span class="ico">📊</span> Overview</button>
-        <button class="nav-link" data-panel="teachers"><span class="ico">👨‍🏫</span> Teachers</button>
-        <button class="nav-link" data-panel="students"><span class="ico">🎓</span> Students</button>
-        <button class="nav-link" data-panel="results"><span class="ico">📋</span> Results</button>
-        <button class="nav-link" data-panel="settings"><span class="ico">⚙️</span> Settings</button>
+        <button class="nav-link active" data-panel="overview"><span class="ico"><i class="fa-solid fa-chart-line"></i></span> Overview</button>
+        <button class="nav-link" data-panel="teachers"><span class="ico"><i class="fa-solid fa-chalkboard-teacher"></i></span> Teachers</button>
+        <button class="nav-link" data-panel="students"><span class="ico"><i class="fa-solid fa-graduation-cap"></i></span> Students</button>
+        <button class="nav-link" data-panel="results"><span class="ico"><i class="fa-solid fa-list-check"></i></span> Results</button>
+        <button class="nav-link" data-panel="settings"><span class="ico"><i class="fa-solid fa-gear"></i></span> Settings</button>
       </nav>
       <div class="sb-footer">
-        <button class="btn btn-ghost-w btn-full btn-sm" id="logout-btn">🚪 Sign Out</button>
+        <button class="btn btn-ghost-w btn-full btn-sm" id="logout-btn"><i class="fa-solid fa-sign-out"></i> Sign Out</button>
       </div>
     </aside>
 
@@ -358,10 +358,10 @@
       <!-- OVERVIEW -->
       <div class="panel active" id="panel-overview">
         <div class="stats-grid">
-          <div class="stat-card indigo"><div class="stat-ico">👨‍🏫</div><div class="stat-val" id="st-teachers">—</div><div class="stat-lbl">Teachers</div></div>
-          <div class="stat-card blue"><div class="stat-ico">🎓</div><div class="stat-val" id="st-students">—</div><div class="stat-lbl">Students</div></div>
-          <div class="stat-card amber"><div class="stat-ico">📋</div><div class="stat-val" id="st-results">—</div><div class="stat-lbl">Results</div></div>
-          <div class="stat-card green"><div class="stat-ico">🏫</div><div class="stat-val" id="st-classes">—</div><div class="stat-lbl">Classes</div></div>
+          <div class="stat-card indigo"><div class="stat-ico"><i class="fa-solid fa-chalkboard-teacher" style="color: green;"></i></div><div class="stat-val" id="st-teachers">—</div><div class="stat-lbl">Teachers</div></div>
+          <div class="stat-card blue"><div class="stat-ico"><i class="fa-solid fa-graduation-cap" style="color: green;"></i></div><div class="stat-val" id="st-students">—</div><div class="stat-lbl">Students</div></div>
+          <div class="stat-card amber"><div class="stat-ico"><i class="fa-solid fa-list-check" style="color: green;"></i></div><div class="stat-val" id="st-results">—</div><div class="stat-lbl">Results</div></div>
+          <div class="stat-card green"><div class="stat-ico"><i class="fa-solid fa-school" style="color: green;"></i></div><div class="stat-val" id="st-classes">—</div><div class="stat-lbl">Classes</div></div>
         </div>
         <div class="info-box">ℹ️ <strong>Active Session/Term</strong> is managed in <strong>Settings → Session</strong>. Classes are managed in <strong>Settings → Classes</strong> and are shared across teacher and student portals automatically.</div>
         <div class="warn-box">🔐 <strong>Subject Passwords:</strong> Each subject has its own password. Teachers must enter the correct subject password to unlock and enter/edit scores. Passwords cannot be left empty.</div>
@@ -397,7 +397,7 @@
             </select>
             <button class="btn btn-primary btn-sm" id="add-student-btn">+ Add Student</button>
             <button class="btn btn-amber btn-sm" id="promote-btn">⬆ Promote Students</button>
-            <button class="btn btn-ghost btn-sm" id="reset-payment-btn">💳 Reset Payment</button>
+            <button class="btn btn-ghost btn-sm" id="reset-payment-btn"><i class="fa-solid fa-credit-card"></i> Reset Payment</button>
           </div>
         </div>
         <div class="tbl-card">
@@ -444,18 +444,18 @@
       <!-- SETTINGS -->
       <div class="panel" id="panel-settings">
         <div class="tabs" id="settings-tabs">
-          <button class="tab-btn active" data-tab="school">🏫 School Info</button>
-          <button class="tab-btn" data-tab="session">📅 Session</button>
-          <button class="tab-btn" data-tab="classes">🏷️ Classes</button>
-          <button class="tab-btn" data-tab="assessment">📝 Assessment</button>
-          <button class="tab-btn" data-tab="subjects">📚 Subjects</button>
-          <button class="tab-btn" data-tab="remarks">🗒️ Remarks</button>
+          <button class="tab-btn active" data-tab="school"><i class="fa-solid fa-school"></i> School Info</button>
+          <button class="tab-btn" data-tab="session"><i class="fa-solid fa-calendar"></i> Session</button>
+          <button class="tab-btn" data-tab="classes"><i class="fa-solid fa-tags"></i> Classes</button>
+          <button class="tab-btn" data-tab="assessment"><i class="fa-solid fa-clipboard-list"></i> Assessment</button>
+          <button class="tab-btn" data-tab="subjects"><i class="fa-solid fa-book"></i> Subjects</button>
+          <button class="tab-btn" data-tab="remarks"><i class="fa-solid fa-sticky-note"></i> Remarks</button>
         </div>
 
         <!-- School Info Tab -->
         <div class="tab-panel active" id="tab-school">
           <div class="settings-card">
-            <h4>🏫 School Information</h4>
+            <h4><i class="fa-solid fa-school"></i> School Information</h4>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
               <div class="fg"><label>School Name</label><input id="s-name" type="text" /></div>
               <div class="fg"><label>Head Teacher's Name</label><input id="s-principal" type="text" /></div>
@@ -463,14 +463,14 @@
               <div class="fg"><label>School Motto</label><input id="s-motto" type="text" /></div>
             </div>
             <div class="fg"><label>Address</label><textarea id="s-address"></textarea></div>
-            <button class="btn btn-primary" id="save-school-btn">💾 Save School Info</button>
+            <button class="btn btn-primary" id="save-school-btn"><i class="fa-solid fa-save"></i> Save School Info</button>
           </div>
         </div>
 
         <!-- Session Tab -->
         <div class="tab-panel" id="tab-session">
           <div class="settings-card">
-            <h4>📅 Active Session &amp; Term</h4>
+            <h4><i class="fa-solid fa-calendar"></i>  Active Session &amp; Term</h4>
             <div class="info-box">Setting the active session and term will pre-fill these fields in the Teacher Portal automatically. Teachers cannot submit results for a session later than the one set here.</div>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
               <div class="fg"><label>Academic Session</label><input id="s-session" type="text" placeholder="e.g. 2024/2025" /></div>
@@ -480,7 +480,7 @@
               <div class="fg"><label>Next Term Begins</label><input id="s-nextterm" type="date" /></div>
               <div class="fg"><label>Term Ends / Break Date</label><input id="s-termends" type="date" /></div>
             </div>
-            <button class="btn btn-primary" id="save-session-btn">💾 Save Session Settings</button>
+            <button class="btn btn-primary" id="save-session-btn"><i class="fa-solid fa-save"></i> Save Session Settings</button>
           </div>
         </div>
 
@@ -512,7 +512,7 @@
               <button class="btn btn-primary" id="add-class-btn">+ Add Class</button>
             </div>
             <div style="margin-top:1rem">
-              <button class="btn btn-primary" id="save-classes-btn">💾 Save Classes</button>
+              <button class="btn btn-primary" id="save-classes-btn"><i class="fa-solid fa-save"></i> Save Classes</button>
             </div>
           </div>
         </div>
@@ -520,7 +520,7 @@
         <!-- Assessment Tab -->
         <div class="tab-panel" id="tab-assessment">
           <div class="settings-card">
-            <h4>📝 Assessment Configuration</h4>
+            <h4><i class="fa-solid fa-note-sticky"></i> Assessment Configuration</h4>
             <div class="info-box">Configure how many tests per term. Total test marks must sum to <strong>30</strong> (CA). Exam is always <strong>70</strong>. Total = 100.</div>
             <div style="font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin-bottom:.5rem;display:grid;grid-template-columns:1fr 100px 38px;gap:.5rem;padding:0 .1rem">
               <span>Test / Component Name</span><span style="text-align:center">Max Score</span><span></span>
@@ -531,37 +531,37 @@
               <span style="font-size:.84rem;color:var(--muted)">Total CA: <strong id="ca-total-display">0</strong>/30 &nbsp;|&nbsp; Exam: <strong>70</strong></span>
             </div>
             <div id="ca-warning" class="warn-box" style="display:none;margin-top:.75rem"></div>
-            <button class="btn btn-primary" id="save-assessment-btn" style="margin-top:1rem">💾 Save Assessment Config</button>
+            <button class="btn btn-primary" id="save-assessment-btn" style="margin-top:1rem"><i class="fa-solid fa-save"></i> Save Assessment Config</button> Save Assessment Config</button>
           </div>
         </div>
 
         <!-- Subjects Tab -->
         <div class="tab-panel" id="tab-subjects">
           <div class="settings-card">
-            <h4>📚 Pre-Primary Subjects (Prep A, Prep B, Nursery 1)</h4>
-            <div class="info-box">🔑 Each subject must have a password. Teachers must enter this password to unlock and edit scores.</div>
+            <h4><i class="fa-solid fa-book"></i> Pre-Primary Subjects (Prep A, Prep B, Nursery 1)</h4>
+            <div class="info-box"><i class="fa-solid fa-key"></i> Each subject must have a password. Teachers must enter this password to unlock and edit scores.</div>
             <div class="subj-list-header"><span>Subject Name</span><span>Subject Password</span><span></span></div>
             <div id="preprimary-subjects-list" class="subj-list"></div>
             <button class="btn btn-ghost btn-sm" id="add-preprimary-subject" style="margin-top:.75rem">+ Add Subject</button>
           </div>
           <div class="settings-card">
-            <h4>📚 Primary Subjects (Nursery 2, Primary 1–5)</h4>
-            <div class="info-box">🔑 Each subject must have a password. Teachers must enter this password to unlock and edit scores.</div>
+            <h4><i class="fa-solid fa-book"></i> Primary Subjects (Nursery 2, Primary 1–5)</h4>
+            <div class="info-box"><i class="fa-solid fa-key"></i> Each subject must have a password. Teachers must enter this password to unlock and edit scores.</div>
             <div class="subj-list-header"><span>Subject Name</span><span>Subject Password</span><span></span></div>
             <div id="primary-subjects-list" class="subj-list"></div>
             <button class="btn btn-ghost btn-sm" id="add-primary-subject" style="margin-top:.75rem">+ Add Subject</button>
           </div>
-          <button class="btn btn-primary" id="save-subjects-btn">💾 Save Subjects &amp; Passwords</button>
+          <button class="btn btn-primary" id="save-subjects-btn"><i class="fa-solid fa-save"></i> Save Subjects &amp; Passwords</button>
         </div>
 
         <!-- Remarks Tab -->
         <div class="tab-panel" id="tab-remarks">
           <div class="settings-card">
-            <h4>🗒️ Remarks Passwords (Per Class)</h4>
+            <h4><i class="fa-solid fa-sticky-note"></i> Remarks Passwords (Per Class)</h4>
             <div class="info-box">Each class has its own remark password. Teachers must enter the class remark password to add or edit the Teacher and Principal remarks on a student's result. Classes are loaded from your Classes settings.</div>
             <div id="remarks-passwords-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;"></div>
             <div style="margin-top:.75rem">
-              <button class="btn btn-primary" id="save-remarks-btn">💾 Save Remarks Passwords</button>
+              <button class="btn btn-primary" id="save-remarks-btn"><i class="fa-solid fa-save"></i> Save Remarks Passwords</button>
             </div>
           </div>
         </div>

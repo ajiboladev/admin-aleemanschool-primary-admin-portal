@@ -521,14 +521,14 @@
         <div class="tab-panel" id="tab-assessment">
           <div class="settings-card">
             <h4><i class="fa-solid fa-note-sticky"></i> Assessment Configuration</h4>
-            <div class="info-box">Configure how many tests per term. Total test marks must sum to <strong>30</strong> (CA). Exam is always <strong>70</strong>. Total = 100.</div>
+            <div class="info-box">Configure how many tests per term. Total test marks must sum to <strong>40</strong> (CA). Exam is always <strong>60</strong>. Total = 100.</div>
             <div style="font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin-bottom:.5rem;display:grid;grid-template-columns:1fr 100px 38px;gap:.5rem;padding:0 .1rem">
               <span>Test / Component Name</span><span style="text-align:center">Max Score</span><span></span>
             </div>
             <div id="tests-container"></div>
             <div style="display:flex;align-items:center;gap:1rem;margin-top:.75rem;flex-wrap:wrap">
               <button class="btn btn-ghost btn-sm" id="add-test-btn">+ Add Test</button>
-              <span style="font-size:.84rem;color:var(--muted)">Total CA: <strong id="ca-total-display">0</strong>/30 &nbsp;|&nbsp; Exam: <strong>70</strong></span>
+              <span style="font-size:.84rem;color:var(--muted)">Total CA: <strong id="ca-total-display">0</strong>/40 &nbsp;|&nbsp; Exam: <strong>60</strong></span>
             </div>
             <div id="ca-warning" class="warn-box" style="display:none;margin-top:.75rem"></div>
             <button class="btn btn-primary" id="save-assessment-btn" style="margin-top:1rem"><i class="fa-solid fa-save"></i> Save Assessment Config</button> Save Assessment Config</button>
@@ -969,15 +969,15 @@ window._removeTest=i=>{testsConfig.splice(i,1);renderTestsConfig();};
 $('add-test-btn').addEventListener('click',()=>{if(testsConfig.length>=6){toast('Maximum 6 test components.','error');return;}testsConfig.push({id:`t${Date.now()}`,name:`Test ${testsConfig.length+1}`,max:10});renderTestsConfig();});
 function updateCATotalDisplay(){
   const total=testsConfig.reduce((s,t)=>s+Number(t.max||0),0);
-  const el=$('ca-total-display');el.textContent=total;el.style.color=total===30?'var(--p2)':'var(--red)';
+  const el=$('ca-total-display');el.textContent=total;el.style.color=total===40?'var(--p2)':'var(--red)';
   const w=$('ca-warning');
-  if(total!==30){w.textContent=`⚠️ CA marks must equal exactly 30. Currently: ${total}`;w.style.display='block';}else{w.style.display='none';}
+  if(total!==40){w.textContent=`⚠️ CA marks must equal exactly 40. Currently: ${total}`;w.style.display='block';}else{w.style.display='none';}
 }
 $('save-assessment-btn').addEventListener('click',async()=>{
   const total=testsConfig.reduce((s,t)=>s+Number(t.max||0),0);
-  if(total!==30){toast('CA total must equal 30.','error');return;}
+  if(total!==40){toast('CA total must equal 40.','error');return;}
   const btn=$('save-assessment-btn');setBtn(btn,true);
-  try{await setDoc(doc(db,'settings','assessment'),{tests:testsConfig,caMax:30,examMax:70,updatedAt:serverTimestamp()});toast('Assessment configuration saved!');}
+  try{await setDoc(doc(db,'settings','assessment'),{tests:testsConfig,caMax:40,examMax:60,updatedAt:serverTimestamp()});toast('Assessment configuration saved!');}
   catch(err){toast('Failed to save.','error');}finally{setBtn(btn,false);}
 });
 
